@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.postcss';
+	import '../app.css';
 	import { Toaster } from 'svelte-sonner';
 	import Schema from '$lib/components/modules/Seo/schema.svelte';
 	import { Seo } from '$lib/components/modules';
