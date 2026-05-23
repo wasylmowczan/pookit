@@ -36,7 +36,7 @@
 
 		<div class="flex gap-4">
 			<Button size="lg" href="/register">Start building</Button>
-			<Button size="lg" href="https://github.com" variant="outline" target="_blank">
+			<Button size="lg" href="https://github.com/wasylmowczan/svelte.rocks" variant="outline" target="_blank">
 				<GitHubIcon/> GitHub
 			</Button>
 		</div>
