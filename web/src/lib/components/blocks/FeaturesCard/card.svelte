@@ -13,12 +13,12 @@
 	let { children, title, description, link }: IntegrationCardProps = $props();
 </script>
 
-<Card class="p-6">
-	<div>
+<Card class="h-full p-6">
+	<div class="flex h-full flex-col">
 		<div class="*:size-12">{@render children?.()}</div>
-		<div class="space-y-2 py-6">
+		<div class="flex-1 space-y-2 py-6">
 			<h3 class="text-lg font-semibold">{title}</h3>
-			<p class="line-clamp-2 text-base text-muted-foreground">{description}</p>
+			<p class="text-base text-muted-foreground">{description}</p>
 		</div>
 
 		<div class="flex gap-3 border-t border-dashed pt-6">
