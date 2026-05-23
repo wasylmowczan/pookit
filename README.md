@@ -79,25 +79,6 @@ SvelteKit SaaS starter kit.
 - Tailwind for styling
 - Superforms for form handling
 
-## 🔒 Security
-
-- Use environment variables
-- Keep dependencies updated
-- Enable HTTPS in production
-- Proper authentication implemented
-
-## 🛠 Troubleshooting
-
-- Check environment variables
-- Verify CORS settings
-
-## 📚 Documentation
-
-- [SvelteKit](https://kit.svelte.dev/docs)
-- [PocketBase](https://pocketbase.io/docs/)
-- [Coolify](https://coolify.io/docs)
-- [Hetzner](https://docs.hetzner.com/)
-
 ## 💖 Contributing
 
 Issues and PRs welcome!
