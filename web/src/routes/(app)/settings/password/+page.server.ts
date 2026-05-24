@@ -4,6 +4,7 @@ import { zod4 as zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { ClientResponseError } from 'pocketbase';
 import type { PageServerLoad } from './$types';
+import { getPostHogClient } from '$lib/server/posthog';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.pb.authStore.isValid) {
@@ -30,6 +31,13 @@ export const actions: Actions = {
 
 		try {
 			await locals.pb.collection('users').update(locals.user?.id, formData);
+
+			const posthog = getPostHogClient();
+			posthog.capture({
+				distinctId: locals.user.email || locals.user.id,
+				event: 'password_changed'
+			});
+
 			locals.pb.authStore.clear();
 		} catch (err) {
 			if (err instanceof ClientResponseError) {

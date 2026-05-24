@@ -3,6 +3,7 @@ import { LoginUserSchema } from '$lib/schemas';
 import { superValidate, setError } from 'sveltekit-superforms';
 import { zod4 as zod } from 'sveltekit-superforms/adapters';
 import { ClientResponseError } from 'pocketbase';
+import { getPostHogClient } from '$lib/server/posthog';
 
 export const actions: Actions = {
 	login: async ({ request, locals }) => {
@@ -21,6 +22,13 @@ export const actions: Actions = {
 				setError(form, 'login', 'Please verify your email address.');
 				return fail(400, { form });
 			}
+
+			const posthog = getPostHogClient();
+			posthog.capture({
+				distinctId: form.data.login,
+				event: 'user_logged_in',
+				properties: { email: form.data.login }
+			});
 
 			return { form };
 		} catch (err) {

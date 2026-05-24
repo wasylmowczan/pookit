@@ -15,6 +15,7 @@
 	import { Seo } from '$lib/components/modules';
 	import { config } from '$lib/config-client';
 	import { EyeOff, Eye } from '@lucide/svelte';
+	import posthog from 'posthog-js';
 
 	let loading = $state(false);
 	let showVerificationPrompt = $state(false);
@@ -28,6 +29,7 @@
 			loading = false;
 			if (result.type === 'success') {
 				toast.success('Logged in successfully.');
+				posthog.identify($formData.login, { email: $formData.login });
 			}
 
 			if (result.type === 'failure') {

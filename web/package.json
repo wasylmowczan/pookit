@@ -17,6 +17,7 @@
 		"ogl": "^1.0.11",
 		"pocketbase": "^0.26.9",
 		"posthog-js": "^1.374.2",
+		"posthog-node": "^5.35.1",
 		"svelte": "5.55.8",
 		"svelte-inview": "^4.0.4",
 		"svelte-motion": "^0.12.2",

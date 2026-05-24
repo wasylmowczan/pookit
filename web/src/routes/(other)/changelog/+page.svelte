@@ -31,6 +31,15 @@
 					items: ['Initial start of the project.']
 				}
 			]
+		},
+		{
+			date: '2026-05-24',
+			logs: [
+				{
+					type: LogType.NewFeature,
+					items: ['Added PostHog integration. ']
+				}
+			]
 		}
 	];
 

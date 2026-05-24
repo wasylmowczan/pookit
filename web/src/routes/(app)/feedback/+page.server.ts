@@ -4,6 +4,7 @@ import { setError, superValidate } from 'sveltekit-superforms';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import { feedbackSchema } from '$lib/schemas';
 import { ClientResponseError } from 'pocketbase';
+import { getPostHogClient } from '$lib/server/posthog';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	return {
@@ -28,6 +29,13 @@ export const actions: Actions = {
 				name: locals.user.id,
 				feedback: form.data.feedback + ' - email: ' + form.data.email + ' - name: ' + form.data.name
 			});
+
+			const posthog = getPostHogClient();
+			posthog.capture({
+				distinctId: locals.user.email || locals.user.id,
+				event: 'feedback_submitted'
+			});
+
 			return { form };
 		} catch (err) {
 			if (err instanceof ClientResponseError) {

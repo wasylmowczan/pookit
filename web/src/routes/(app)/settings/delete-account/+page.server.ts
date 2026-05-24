@@ -1,6 +1,7 @@
 import { UpdateAvatarSchema } from '$lib/schemas';
 import { error, redirect, type Actions } from '@sveltejs/kit';
 import { ClientResponseError } from 'pocketbase';
+import { getPostHogClient } from '$lib/server/posthog';
 import { fail, superValidate } from 'sveltekit-superforms';
 import { zod4 as zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad } from './$types';
@@ -25,6 +26,12 @@ export const actions: Actions = {
 		}
 
 		try {
+			const posthog = getPostHogClient();
+			posthog.capture({
+				distinctId: locals.user.email || locals.user.id,
+				event: 'account_deleted'
+			});
+
 			await locals.pb.collection('users').delete(locals.user?.id);
 			redirect(303, `/login`);
 		} catch (err) {

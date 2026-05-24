@@ -14,6 +14,7 @@
 	import FormFieldErrors from '$lib/components/ui/form/form-field-errors.svelte';
 	import { Seo } from '$lib/components/modules';
 	import { config } from '$lib/config-client';
+	import posthog from 'posthog-js';
 
 	let loading = $state(false);
 
@@ -28,6 +29,7 @@
 				toast.success(
 					'Account created successfully. Please check your email for a verification link.'
 				);
+				posthog.identify($formData.email, { email: $formData.email });
 			} else {
 				toast.error('Failed to register.');
 			}

@@ -74,6 +74,7 @@
 				<DropdownMenu.Item
 					onclick={async () => {
 						await fetch('/api/logout');
+						posthog.capture('user_logged_out');
 						posthog.reset();
 						goto(`/`);
 					}}
