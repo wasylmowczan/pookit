@@ -6,19 +6,17 @@
 
 	const totalUsers = $derived(data.data.length);
 
-	const getNewUsersCount = () =>
-		data.data.filter(
-			(user: { created: string }) => Date.parse(user.created) > Date.now() - 1000 * 60 * 60 * 24 * 7
-		).length;
-
-	const getUnverifiedUsersCount = () =>
-		data.data.filter((user: { verified: boolean }) => !user.verified).length;
-
 	const calculateChange = (current: number, total: number) =>
 		total > 0 ? parseFloat(((current / total) * 100).toFixed(1)) : 0;
 
-	let newUsers = getNewUsersCount();
-	let unverifiedUsers = getUnverifiedUsersCount();
+	const newUsers = $derived(
+		data.data.filter(
+			(user: { created: string }) => Date.parse(user.created) > Date.now() - 1000 * 60 * 60 * 24 * 7
+		).length
+	);
+	const unverifiedUsers = $derived(
+		data.data.filter((user: { verified: boolean }) => !user.verified).length
+	);
 
 	// Stats data
 	interface StatsItem {
@@ -28,7 +26,7 @@
 		icon: any;
 	}
 
-	let stats: StatsItem[] = [
+	const stats: StatsItem[] = $derived([
 		{
 			title: 'Total Users',
 			value: totalUsers,
@@ -47,7 +45,7 @@
 			change: calculateChange(unverifiedUsers, totalUsers),
 			icon: UserMinus
 		}
-	];
+	]);
 </script>
 
 <div class="grid gap-4 md:grid-cols-3">

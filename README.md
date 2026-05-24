@@ -73,7 +73,7 @@ SvelteKit SaaS starter kit.
    PUBLIC_PB_URL=https://your-instance.pockethost.io // PB URL, dodaç w Cloudflare
    ```
 
-5. Deploy and connect your domain
+5. Add Compatibility flag `nodejs_compat`
 
 ## 🔧 Configuration
 

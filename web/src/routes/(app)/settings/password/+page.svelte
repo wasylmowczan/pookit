@@ -4,6 +4,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { FormControl, FormField } from '$lib/components/ui/form';
 	import { superForm } from 'sveltekit-superforms';
+	import { untrack } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import { zod4 as zod } from 'sveltekit-superforms/adapters';
@@ -19,7 +20,7 @@
 
 	let loading = $state(false);
 
-	const form = superForm(data.form, {
+	const form = superForm(untrack(() => data.form), {
 		validators: zod(UpdatePasswordSchema),
 		onSubmit: () => {
 			loading = true;

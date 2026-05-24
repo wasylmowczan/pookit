@@ -5,6 +5,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { FormControl, FormField } from '$lib/components/ui/form';
 	import { fileProxy, superForm } from 'sveltekit-superforms';
+	import { untrack } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { Camera, LoaderCircle, Trash } from '@lucide/svelte';
 	import AltAvatar from '$lib/assets/alt-avatar.svg';
@@ -23,7 +24,7 @@
 	let avatarPreview: string | null = $state(null);
 	let currentAvatarUrl: string | null = $state(null);
 
-	const form = superForm(data.form, {
+	const form = superForm(untrack(() => data.form), {
 		dataType: 'json',
 		validators: zod(UpdateAvatarSchema),
 		onSubmit: () => {
@@ -45,9 +46,11 @@
 	const { form: formData, enhance } = form;
 
 	const avatarState = writable({
-		currentAvatarUrl: data.user?.avatar
-			? `${config.pbUrl}/api/files/${data.user.collectionId}/${data.user.id}/${data.user.avatar}`
-			: null
+		currentAvatarUrl: untrack(() =>
+			data.user?.avatar
+				? `${config.pbUrl}/api/files/${data.user.collectionId}/${data.user.id}/${data.user.avatar}`
+				: null
+		)
 	});
 
 	function updateAvatar(url: string | null) {

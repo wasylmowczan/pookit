@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
+	import { untrack } from 'svelte';
 	import { zod4Client as zodClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
 	import { Textarea } from '$lib/components/ui/textarea';
@@ -16,7 +17,7 @@
 
 	let { data } = $props();
 
-	const form = superForm(data.form, {
+	const form = superForm(untrack(() => data.form), {
 		validators: zodClient(feedbackSchema),
 		onResult: async ({ result }) => {
 			if (result.type === 'success') {

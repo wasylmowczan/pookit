@@ -12,16 +12,15 @@
 
 	const totalFeedbacks = $derived(data.data.length);
 
-	const getNewFeedbacksCount = () =>
-		data.data.filter(
-			(feedback: { created: string }) =>
-				Date.parse(feedback.created) > Date.now() - 1000 * 60 * 60 * 24 * 7
-		).length;
-
 	const calculateChange = (current: number, total: number) =>
 		total > 0 ? parseFloat(((current / total) * 100).toFixed(1)) : 0;
 
-	let newFeedbacks = getNewFeedbacksCount();
+	const newFeedbacks = $derived(
+		data.data.filter(
+			(feedback: { created: string }) =>
+				Date.parse(feedback.created) > Date.now() - 1000 * 60 * 60 * 24 * 7
+		).length
+	);
 
 	// Stats data
 	interface StatsItem {
@@ -31,7 +30,7 @@
 		icon: any;
 	}
 
-	let stats: StatsItem[] = [
+	const stats: StatsItem[] = $derived([
 		{
 			title: 'Total',
 			value: totalFeedbacks,
@@ -44,7 +43,7 @@
 			change: calculateChange(newFeedbacks, totalFeedbacks),
 			icon: MessageCirclePlus
 		}
-	];
+	]);
 </script>
 
 <div class="grid gap-4 md:grid-cols-3">
