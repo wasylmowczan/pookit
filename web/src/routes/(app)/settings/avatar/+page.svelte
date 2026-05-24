@@ -24,22 +24,24 @@
 	let avatarPreview: string | null = $state(null);
 	let currentAvatarUrl: string | null = $state(null);
 
-	const form = superForm(untrack(() => data.form), {
-		dataType: 'json',
-		validators: zod(UpdateAvatarSchema),
-		onSubmit: () => {
-			loading = true;
-		},
-		onResult({ result }) {
-			loading = false;
-			if (result.type === 'success') {
-				toast.success('Avatar updated');
-			} else {
-				toast.error('Failed to update avatar');
+	const form = superForm(
+		untrack(() => data.form),
+		{
+			dataType: 'json',
+			validators: zod(UpdateAvatarSchema),
+			onSubmit: () => {
+				loading = true;
+			},
+			onResult({ result }) {
+				loading = false;
+				if (result.type === 'success') {
+					toast.success('Avatar updated');
+				} else {
+					toast.error('Failed to update avatar');
+				}
 			}
-			window.location.reload();
 		}
-	});
+	);
 
 	const file = fileProxy(form, 'avatar');
 

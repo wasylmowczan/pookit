@@ -20,20 +20,23 @@
 
 	let loading = $state(false);
 
-	const form = superForm(untrack(() => data.form), {
-		validators: zod(UpdatePasswordSchema),
-		onSubmit: () => {
-			loading = true;
-		},
-		onResult: ({ result }) => {
-			loading = false;
-			if (result.type === 'success') {
-				toast.success('Password updated');
-			} else {
-				toast.error('Failed to update password');
+	const form = superForm(
+		untrack(() => data.form),
+		{
+			validators: zod(UpdatePasswordSchema),
+			onSubmit: () => {
+				loading = true;
+			},
+			onResult: ({ result }) => {
+				loading = false;
+				if (result.type === 'success') {
+					toast.success('Password updated');
+				} else {
+					toast.error('Failed to update password');
+				}
 			}
 		}
-	});
+	);
 
 	const { form: formData, enhance } = form;
 </script>

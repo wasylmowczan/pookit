@@ -17,16 +17,19 @@
 
 	let { data } = $props();
 
-	const form = superForm(untrack(() => data.form), {
-		validators: zodClient(feedbackSchema),
-		onResult: async ({ result }) => {
-			if (result.type === 'success') {
-				toast.success('Feedback submitted successfully');
-			} else {
-				toast.error('Failed to submit feedback');
+	const form = superForm(
+		untrack(() => data.form),
+		{
+			validators: zodClient(feedbackSchema),
+			onResult: async ({ result }) => {
+				if (result.type === 'success') {
+					toast.success('Feedback submitted successfully');
+				} else {
+					toast.error('Failed to submit feedback');
+				}
 			}
 		}
-	});
+	);
 
 	const { form: formData, enhance } = form;
 </script>

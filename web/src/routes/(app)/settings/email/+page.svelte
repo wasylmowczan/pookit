@@ -20,20 +20,23 @@
 
 	let loading = $state(false);
 
-	const form = superForm(untrack(() => data.form), {
-		validators: zod(UpdateEmailSchema),
-		onSubmit: () => {
-			loading = true;
-		},
-		onResult: ({ result }) => {
-			loading = false;
-			if (result.type === 'success') {
-				toast.success('Please check your email to verify your new email address');
-			} else {
-				toast.error('Failed to update email');
+	const form = superForm(
+		untrack(() => data.form),
+		{
+			validators: zod(UpdateEmailSchema),
+			onSubmit: () => {
+				loading = true;
+			},
+			onResult: ({ result }) => {
+				loading = false;
+				if (result.type === 'success') {
+					toast.success('Please check your email to verify your new email address');
+				} else {
+					toast.error('Failed to update email');
+				}
 			}
 		}
-	});
+	);
 
 	const { form: formData, enhance } = form;
 </script>

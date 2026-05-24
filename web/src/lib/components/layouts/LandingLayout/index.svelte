@@ -6,7 +6,10 @@
 
 	let { children }: Props = $props();
 
-	const menuItems = [{ name: 'Home', href: '/' }];
+	const menuItems = [
+		{ name: 'Home', href: '/' },
+		{ name: 'Pricing', href: '/pricing' }
+	];
 </script>
 
 <div class="flex min-h-screen w-full flex-col dotted-background">

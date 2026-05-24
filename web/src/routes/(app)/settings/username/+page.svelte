@@ -19,21 +19,24 @@
 	let { data } = $props();
 	let loading = $state(false);
 
-	const form = superForm(untrack(() => data.form), {
-		validators: zod(UpdateNameSchema),
-		resetForm: false,
-		onSubmit: () => {
-			loading = true;
-		},
-		onResult: async ({ result }) => {
-			loading = false;
-			if (result.type === 'success') {
-				toast.success('Name updated');
-			} else {
-				toast.error('Failed to update name');
+	const form = superForm(
+		untrack(() => data.form),
+		{
+			validators: zod(UpdateNameSchema),
+			resetForm: false,
+			onSubmit: () => {
+				loading = true;
+			},
+			onResult: async ({ result }) => {
+				loading = false;
+				if (result.type === 'success') {
+					toast.success('Name updated');
+				} else {
+					toast.error('Failed to update name');
+				}
 			}
 		}
-	});
+	);
 
 	const { form: formData, enhance } = form;
 </script>
