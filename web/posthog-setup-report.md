@@ -37,17 +37,17 @@ The wizard has completed a deep integration of PostHog analytics into svelte.roc
 
 ## Events instrumented
 
-| Event name | Description | File |
-|---|---|---|
-| `user_logged_in` | User successfully authenticates | `src/routes/(auth)/login/+page.server.ts` |
-| `user_signed_up` | User creates a new account | `src/routes/(auth)/register/+page.server.ts` |
-| `user_logged_out` | User logs out | `src/lib/components/nav-user.svelte` |
-| `feedback_submitted` | User submits product feedback | `src/routes/(app)/feedback/+page.server.ts` |
-| `account_deleted` | User permanently deletes their account | `src/routes/(app)/settings/delete-account/+page.server.ts` |
-| `email_change_requested` | User requests an email address change | `src/routes/(app)/settings/email/+page.server.ts` |
-| `password_changed` | User successfully changes their password | `src/routes/(app)/settings/password/+page.server.ts` |
-| `posthog.identify()` | Client-side identity link on login | `src/routes/(auth)/login/+page.svelte` |
-| `posthog.identify()` | Client-side identity link on registration | `src/routes/(auth)/register/+page.svelte` |
+| Event name               | Description                               | File                                                       |
+| ------------------------ | ----------------------------------------- | ---------------------------------------------------------- |
+| `user_logged_in`         | User successfully authenticates           | `src/routes/(auth)/login/+page.server.ts`                  |
+| `user_signed_up`         | User creates a new account                | `src/routes/(auth)/register/+page.server.ts`               |
+| `user_logged_out`        | User logs out                             | `src/lib/components/nav-user.svelte`                       |
+| `feedback_submitted`     | User submits product feedback             | `src/routes/(app)/feedback/+page.server.ts`                |
+| `account_deleted`        | User permanently deletes their account    | `src/routes/(app)/settings/delete-account/+page.server.ts` |
+| `email_change_requested` | User requests an email address change     | `src/routes/(app)/settings/email/+page.server.ts`          |
+| `password_changed`       | User successfully changes their password  | `src/routes/(app)/settings/password/+page.server.ts`       |
+| `posthog.identify()`     | Client-side identity link on login        | `src/routes/(auth)/login/+page.svelte`                     |
+| `posthog.identify()`     | Client-side identity link on registration | `src/routes/(auth)/register/+page.svelte`                  |
 
 ## Next steps
 

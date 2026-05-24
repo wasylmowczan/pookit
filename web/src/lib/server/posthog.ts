@@ -1,12 +1,12 @@
 import { PostHog } from 'posthog-node';
-import { PUBLIC_POSTHOG_KEY, PUBLIC_POSTHOG_HOST } from '$env/static/public';
+import { config } from '$lib/config-server';
 
 let posthogClient: PostHog | null = null;
 
 export function getPostHogClient() {
 	if (!posthogClient) {
-		posthogClient = new PostHog(PUBLIC_POSTHOG_KEY, {
-			host: PUBLIC_POSTHOG_HOST,
+		posthogClient = new PostHog(config.posthogApiKey, {
+			host: config.posthogApiHost,
 			flushAt: 1,
 			flushInterval: 0
 		});
