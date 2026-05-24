@@ -21,28 +21,28 @@ SvelteKit SaaS starter kit.
 
    ```bash
    git clone https://github.com/wasylmowczan/svelte.rocks.git
-   cd ssskit.io
+   cd svelte.rocks
    ```
 
 2. Set up environment:
 
    ```bash
    # Create .env in src/web
-   PUBLIC_PB_URL=http://localhost:8090
-   ORIGIN=http://localhost:5173
+   PUBLIC_BASE_URL=http://localhost:5173
+   PUBLIC_PB_URL=http://127.0.0.1:8090
    ```
 
 3. Start backend:
 
    ```bash
-   cd src/backend
+   cd backend
    ./pocketbase serve
    ```
 
 4. Start frontend:
 
    ```bash
-   cd src/web
+   cd web
    npm install
    npm run dev
    ```
@@ -51,17 +51,29 @@ SvelteKit SaaS starter kit.
 
 ## 🌐 Deployment
 
-### Using Coolify (Recommended)
+### Backend: PocketHost
 
-1. Set up on Hetzner
-2. Configure in Coolify:
+1. Sign up on [PocketHost](https://pockethost.io)
+2. Create new instance and connect GitHub repo
+3. Set environment variables in PocketHost dashboard
+4. Note your Public URL (e.g., `https://your-instance.pockethost.io`)
 
-   ```bash
-   PUBLIC_PB_URL=https://api.your-domain.com
-   ORIGIN=https://your-domain.com
+### Frontend: Cloudflare Pages
+
+1. Log in to [Cloudflare Pages](https://pages.cloudflare.com)
+2. Connect your GitHub repository
+3. Set build settings:
+   - Build command: `npm run build`
+   - Build output directory: `.svelte-kit/cloudflare`
+   - Root directory: `web`
+4. Add environment variables:
+
+   ```
+   PUBLIC_BASE_URL=https://svelte-rocks.pages.dev/ // Cloudflare Pages URL
+   PUBLIC_PB_URL=https://your-instance.pockethost.io // PB URL, dodaç w Cloudflare
    ```
 
-3. Deploy via Coolify interface
+5. Deploy and connect your domain
 
 ## 🔧 Configuration
 
