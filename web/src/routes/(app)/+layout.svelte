@@ -14,13 +14,15 @@
 
 	let { data, children } = $props();
 
-	const currentAvatarUrl = data.user?.avatar
-		? `${config.pbUrl}/api/files/${data.user.collectionId}/${data.user.id}/${data.user.avatar}`
-		: altAvatar;
+	const currentAvatarUrl = $derived(
+		data.user?.avatar
+			? `${config.pbUrl}/api/files/${data.user.collectionId}/${data.user.id}/${data.user.avatar}`
+			: altAvatar
+	);
 
-	let showNavAdmin = data.user?.name?.includes('superadmin');
+	let showNavAdmin = $derived(data.user?.name?.includes('superadmin'));
 
-	const menu = {
+	const menu = $derived({
 		navMain: {
 			label: 'User Panel',
 			items: [
@@ -64,11 +66,13 @@
 			email: data.user?.email,
 			avatar: currentAvatarUrl
 		}
-	};
+	});
 
-	posthog.identify(data.user?.email, {
-		email: data.user?.email,
-		name: data.user?.name
+	$effect(() => {
+		posthog.identify(data.user?.email, {
+			email: data.user?.email,
+			name: data.user?.name
+		});
 	});
 </script>
 

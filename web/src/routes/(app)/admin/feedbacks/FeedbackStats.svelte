@@ -10,7 +10,7 @@
 
 	let { data } = $props();
 
-	const totalFeedbacks = data.data.length;
+	const totalFeedbacks = $derived(data.data.length);
 
 	const getNewFeedbacksCount = () =>
 		data.data.filter(

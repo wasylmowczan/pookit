@@ -4,7 +4,7 @@
 
 	let { data } = $props();
 
-	const totalUsers = data.data.length;
+	const totalUsers = $derived(data.data.length);
 
 	const getNewUsersCount = () =>
 		data.data.filter(
