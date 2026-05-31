@@ -5,15 +5,8 @@ import { config as configServer } from '$lib/config-server';
 import type { User } from '$lib/types';
 
 export const isAdminUser = (user: User | null | undefined): boolean => {
-	if (!user) {
-		return false;
-	}
-
-	const isConfiguredAdmin =
-		Boolean(configServer.superAdminEmail) && user.email === configServer.superAdminEmail;
-	const hasAdminName = user.name?.toLowerCase().includes('superadmin') ?? false;
-
-	return isConfiguredAdmin || hasAdminName;
+	if (!user) return false;
+	return Boolean(configServer.superAdminEmail) && user.email === configServer.superAdminEmail;
 };
 
 export const getSuperuserClient = async (): Promise<PocketBase> => {
@@ -28,4 +21,14 @@ export const getSuperuserClient = async (): Promise<PocketBase> => {
 		.authWithPassword(configServer.superAdminEmail, configServer.superAdminPassword);
 
 	return pb;
+};
+
+export const requireSuperuserClient = async (
+	user: User | null | undefined
+): Promise<PocketBase> => {
+	if (!isAdminUser(user)) {
+		throw error(403, 'Forbidden');
+	}
+
+	return getSuperuserClient();
 };

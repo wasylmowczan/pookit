@@ -4,6 +4,7 @@ import { setError, superValidate } from 'sveltekit-superforms';
 import { error, fail, type Actions } from '@sveltejs/kit';
 import { feedbackSchema } from '$lib/schemas';
 import { ClientResponseError } from 'pocketbase';
+import { getSuperuserClient } from '$lib/server/pocketbase-superuser';
 import { getPostHogClient } from '$lib/server/posthog';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -25,7 +26,8 @@ export const actions: Actions = {
 		}
 
 		try {
-			await locals.pb.collection('feedback').create({
+			const superuserPb = await getSuperuserClient();
+			await superuserPb.collection('feedback').create({
 				name: locals.user.id,
 				feedback: form.data.feedback + ' - email: ' + form.data.email + ' - name: ' + form.data.name
 			});

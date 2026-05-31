@@ -47,10 +47,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 			event.locals.user = event.locals.pb.authStore.model as User;
 		} catch (error) {
 			event.locals.pb.authStore.clear();
-			event.locals.user = {} as User;
+			event.locals.user = null;
 		}
 	} else {
-		event.locals.user = {} as User;
+		event.locals.user = null;
 	}
 
 	const response = await resolve(event);
