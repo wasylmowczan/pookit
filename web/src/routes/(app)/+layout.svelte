@@ -20,7 +20,7 @@
 			: altAvatar
 	);
 
-	let showNavAdmin = $derived(data.user?.name?.includes('superadmin'));
+	let showNavAdmin = $derived(data.isAdmin);
 
 	const menu = $derived({
 		navMain: {

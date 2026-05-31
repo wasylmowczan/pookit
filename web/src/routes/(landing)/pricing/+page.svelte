@@ -7,21 +7,17 @@
 		free: [
 			'Sveltekit Boilerplate',
 			'Auth with PocketBase',
-            'Polar Payments Integration',
-            'PostHog Integration',
-            'Admin Panel (Users & Feedback)',
-            'SEO optimized pages',
+			'Polar Payments Integration',
+			'PostHog Integration',
+			'Admin Panel (Users & Feedback)',
+			'SEO optimized pages',
 			'Light / Dark Mode',
 			'Tailwind CSS 4 + shadcn-svelte',
-            'Changelog & Roadmap Pages',
+			'Changelog & Roadmap Pages',
 			'Legal Pages (Privacy Policy, ToS)',
-			'Cloudflare Deployment Config',
+			'Cloudflare Deployment Config'
 		],
-		pro: [
-			'Email integration',
-			'Extra Landing page templates',
-            'Priority support',
-		]
+		pro: ['Email integration', 'Extra Landing page templates', 'Priority support']
 	};
 </script>
 
