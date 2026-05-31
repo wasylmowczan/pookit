@@ -1,4 +1,4 @@
-# Svelte.rocks
+# Pookit
 
 SvelteKit SaaS starter kit.
 
@@ -20,8 +20,8 @@ SvelteKit SaaS starter kit.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/wasylmowczan/svelte.rocks.git
-   cd svelte.rocks
+   git clone https://github.com/wasylmowczan/pookit.git
+   cd pookit
    ```
 
 2. Set up environment:

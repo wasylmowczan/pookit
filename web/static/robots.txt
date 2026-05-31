@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: */admin/*  # Prevents crawlers from indexing admin pages
 Allow: /  # Allows the rest of the site to be indexed
-Sitemap: https://svelte.rocks/sitemap.xml
+Sitemap: https://pookit.pages.gev/sitemap.xml

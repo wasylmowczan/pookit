@@ -1,7 +1,7 @@
 <wizard-report>
 # PostHog post-wizard report
 
-The wizard has completed a deep integration of PostHog analytics into svelte.rocks. Below is a summary of all changes made.
+The wizard has completed a deep integration of PostHog analytics into Pookit. Below is a summary of all changes made.
 
 ## Summary of changes
 

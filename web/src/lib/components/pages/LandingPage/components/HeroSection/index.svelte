@@ -38,7 +38,7 @@
 			<Button size="lg" href="/register">Start building</Button>
 			<Button
 				size="lg"
-				href="https://github.com/wasylmowczan/svelte.rocks"
+				href="https://github.com/wasylmowczan/pookit"
 				variant="outline"
 				target="_blank"
 			>

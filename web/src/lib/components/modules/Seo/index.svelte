@@ -16,12 +16,12 @@
 		title = `${config.appName} - SaaS Starter Kit, built with SvelteKit & PocketBase.`,
 		description = `${config.appName} is a modern SaaS template/boilerplate built with SvelteKit, Pocketbase and shadcn-svelte. Includes auth, user & admin dashboard, user settings, and more..`,
 		keywords = 'SaaS, SvelteKit, PocketBase, shadcn-svelte, Starter Kit, Modern SaaS, Template, Boilerplate, Auth, User Dashboard, Admin Dashboard, User Settings',
-		image = 'https://svelte.rocks/seo-image.png',
+		image = 'https://pookit.pages.dev/seo-image.png',
 		isProtected = false
 	}: Props = $props();
 
 	let baseUrl = $derived(
-		config.baseUrl || (browser ? window.location.origin : 'https://svelte.rocks/')
+		config.baseUrl || (browser ? window.location.origin : 'https://pookit.pages.dev/')
 	);
 	let path = $derived(page.url.pathname);
 	let fullUrl = $derived(`${baseUrl}${path}`);

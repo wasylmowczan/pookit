@@ -1,6 +1,6 @@
 {
-	"name": "Svelte.rocks",
-	"description": "Svelte.rocks is the Sveltekit and PocketBase boilerplate for building web applications. It provides a solid foundation for developers to quickly create and deploy their projects with ease.",
+	"name": "Pookit",
+	"description": "Pookit is the Sveltekit and PocketBase boilerplate for building web applications. It provides a solid foundation for developers to quickly create and deploy their projects with ease.",
 	"display": "standalone",
 	"start_url": "/",
 	"scope": "/",
