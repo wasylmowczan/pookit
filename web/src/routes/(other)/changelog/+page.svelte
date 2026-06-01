@@ -24,6 +24,15 @@
 
 	const changelog: ChangelogEntry[] = [
 		{
+			date: '2026-06-01',
+			logs: [
+				{
+					type: LogType.Improvement,
+					items: ['Added script to start PocketBase and SvelteKit dev servers concurrently.']
+				}
+			]
+		},
+		{
 			date: '2026-05-20',
 			logs: [
 				{
