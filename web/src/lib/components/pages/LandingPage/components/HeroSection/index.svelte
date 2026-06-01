@@ -26,6 +26,9 @@
 		<PointerHighlight
 			rectangleClassName="bg-neutral-200 dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600"
 			pointerClassName="text-yellow-500"
+			pointerOffsetX={-1}
+			pointerOffsetY={-1}
+			pointerRotationDeg={-90}
 		>
 			<span class="relative z-10 text-lg md:text-xl lg:text-2xl"
 				>Your <span class="font-semibold" style="color: #FF3E00">SvelteKit</span> +

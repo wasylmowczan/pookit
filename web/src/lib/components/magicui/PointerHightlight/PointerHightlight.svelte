@@ -7,6 +7,9 @@
 	export let pointerClassName = '';
 	export let containerClassName = '';
 	export let inView: boolean = true;
+	export let pointerOffsetX = 4;
+	export let pointerOffsetY = 4;
+	export let pointerRotationDeg = -90;
 
 	let containerRef: HTMLDivElement;
 
@@ -102,10 +105,10 @@
 			></div>
 		</div>
 		<div
-			class="pointer-events-none absolute"
+			class="pointer-events-none absolute left-0 top-0"
 			style="
         opacity: 1;
-        transform: translate({width + 4}px, {height + 4}px) rotate(-90deg);
+        transform: translate({width + pointerOffsetX}px, {height + pointerOffsetY}px) rotate({pointerRotationDeg}deg);
         transition: opacity 0.1s ease-in-out, transform 1s ease-in-out;
       "
 		>
