@@ -20,7 +20,7 @@
 		class="flex flex-col items-center text-center lg:items-start lg:text-left gap-8 md:w-1/2 justify-center"
 	>
 		<h1 class="text-4xl font-bold tracking-tighter md:text-5xl lg:text-7xl">
-			Ship beautiful projects
+			True idie hacker boilerplate
 		</h1>
 
 		<PointerHighlight
@@ -31,9 +31,10 @@
 			pointerRotationDeg={-90}
 		>
 			<span class="relative z-10 text-lg md:text-xl lg:text-2xl"
-				>Your <span class="font-semibold" style="color: #FF3E00">SvelteKit</span> +
-				<span class="font-semibold" style="color: #72b7ca">PocketBase</span> boilerplate for building
-				amazing projects.</span
+				>Combining the simplicity of <span class="font-semibold" style="color: #72b7ca"
+					>PocketBase</span
+				> with the power of <span class="font-semibold" style="color: #FF3E00">SvelteKit</span
+				></span
 			>
 		</PointerHighlight>
 

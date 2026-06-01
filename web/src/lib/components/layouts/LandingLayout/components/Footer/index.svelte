@@ -40,7 +40,7 @@
 		<div class="grid md:grid-cols-4 gap-8">
 			<!-- 1 column -->
 			<div class="space-y-8">
-				<p>A Modern SaaS foundation powered by SvelteKit and PocketBase.</p>
+				<p>Powered by two of the most loved technologies in modern web development.</p>
 				<div class="flex space-x-6">
 					{#each socialLinks as { name, href, icon }}
 						{@const SvelteComponent = icon}
