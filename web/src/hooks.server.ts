@@ -43,7 +43,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	if (event.locals.pb.authStore.isValid) {
 		try {
-			await event.locals.pb.collection('users').authRefresh();
+			const token = event.locals.pb.authStore.token;
+			const payload = JSON.parse(atob(token.split('.')[1]));
+			const expiresInMs = payload.exp * 1000 - Date.now();
+
+			if (expiresInMs < 5 * 60 * 1000) {
+				await event.locals.pb.collection('users').authRefresh();
+			}
+
 			event.locals.user = event.locals.pb.authStore.model as User;
 		} catch (error) {
 			event.locals.pb.authStore.clear();
