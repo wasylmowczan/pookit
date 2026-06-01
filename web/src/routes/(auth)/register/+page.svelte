@@ -12,11 +12,21 @@
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
 	import FormLabel from '$lib/components/ui/form/form-label.svelte';
 	import FormFieldErrors from '$lib/components/ui/form/form-field-errors.svelte';
-	import { Seo } from '$lib/components/modules';
+	import { Seo, FullscreenLoader } from '$lib/components/modules';
 	import { config } from '$lib/config-client';
 	import posthog from 'posthog-js';
+	import PocketBase from 'pocketbase';
+	import Google from '$lib/components/icons/brands/Google.svelte';
+	import { onMount } from 'svelte';
 
 	let loading = $state(false);
+	let googleLoading = $state(false);
+	let redirecting = $state(false);
+	let lastAuthMethod = $state<string | null>(null);
+
+	onMount(() => {
+		lastAuthMethod = localStorage.getItem('lastAuthMethod');
+	});
 
 	const form = superForm(defaultValues(zod(RegisterUserSchema)), {
 		validators: zod(RegisterUserSchema),
@@ -37,6 +47,51 @@
 	});
 
 	const { form: formData, enhance } = form;
+
+	function handleGoogleLogin() {
+		// Open popup synchronously in the click handler so browsers treat it as
+		// user-initiated (prevents it from opening as a new tab instead of a popup).
+		const w = 600, h = 700;
+		const left = Math.round(window.screenX + (window.outerWidth - w) / 2);
+		const top = Math.round(window.screenY + (window.outerHeight - h) / 2);
+		const popup = window.open('', 'google-auth', `width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`);
+
+		googleLoading = true;
+		const pb = new PocketBase(config.pbUrl);
+		pb.collection('users')
+			.authWithOAuth2({
+				provider: 'google',
+				urlCallback(url) {
+					if (popup) {
+						popup.location.href = url;
+					} else {
+						window.open(url, 'google-auth', `width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`);
+					}
+				}
+			})
+			.then(async (authData) => {
+				const fd = new FormData();
+				fd.append('token', authData.token);
+				fd.append('record', JSON.stringify(authData.record));
+
+				const res = await fetch('?/loginWithGoogle', { method: 'POST', body: fd });
+
+				if (res.ok) {
+					posthog.identify(authData.record.email, { email: authData.record.email });
+					toast.success('Signed in with Google.');
+					localStorage.setItem('lastAuthMethod', 'google');
+					redirecting = true;
+					window.location.href = '/dashboard';
+				} else {
+					toast.error('Google sign-in failed.');
+					googleLoading = false;
+				}
+			})
+			.catch(() => {
+				toast.error('Google sign-in failed.');
+				googleLoading = false;
+			});
+	}
 </script>
 
 <Seo
@@ -44,6 +99,10 @@
 	description={`Register to ${config.appName}`}
 	keywords="register, register to ai image generator"
 />
+
+{#if redirecting}
+	<FullscreenLoader message="Signing you in…" />
+{/if}
 
 <div class="min-h-screen grid lg:grid-cols-2">
 	<!-- Left: Form -->
@@ -90,8 +149,25 @@
 								</FormField>
 							</div>
 							<Button disabled={loading} type="submit" class="w-full">Create Account</Button>
+						</div>					<div class="relative my-4">
+						<div class="absolute inset-0 flex items-center"><span class="w-full border-t"></span></div>
+						<div class="relative flex justify-center text-xs uppercase">
+							<span class="bg-card px-2 text-muted-foreground">Or continue with</span>
 						</div>
-						<div class="mt-4 text-sm text-center">
+					</div>
+					<Button
+						type="button"
+						variant="outline"
+						class="w-full"
+						disabled={googleLoading}
+						onclick={handleGoogleLogin}
+					>
+						<Google class="mr-2 h-4 w-4" />
+						{googleLoading ? 'Connecting...' : 'Google'}
+						{#if lastAuthMethod === 'google'}
+							<span class="ml-auto text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none">Last used</span>
+						{/if}
+					</Button>						<div class="mt-4 text-sm text-center">
 							Already have an account? <a href="/login" class="underline">Login</a>
 						</div>
 					</form>

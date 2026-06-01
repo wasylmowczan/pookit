@@ -44,7 +44,7 @@
 		{
 			title: 'Google login',
 			description: 'It would be good to have a possibility to login with Google account.',
-			status: 'Approved',
+			status: 'Done',
 			tags: ['Enhancement']
 		}
 	];

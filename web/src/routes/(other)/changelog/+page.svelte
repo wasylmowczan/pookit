@@ -29,6 +29,10 @@
 				{
 					type: LogType.Improvement,
 					items: ['Added script to start PocketBase and SvelteKit dev servers concurrently.']
+				},
+				{
+					type: LogType.NewFeature,
+					items: ['Added posibility to register and login with Google account.']
 				}
 			]
 		},
