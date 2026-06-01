@@ -48,11 +48,11 @@
 
 <div class="grid gap-4 md:grid-cols-3">
 	{#each stats as stat}
-		<Card class="dark:border-primary">
+		<Card>
 			<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<CardTitle class="text-sm font-medium">{stat.title}</CardTitle>
 				{#if stat.icon}
-					<stat.icon class="size-6 text-muted-foreground" />
+					<stat.icon class="size-6" />
 				{/if}
 			</CardHeader>
 			<CardContent>
@@ -65,8 +65,8 @@
 						<ArrowDownIcon class="h-4 w-4 text-red-500" />
 						<span class="text-red-500">-{stat.change}% from last month</span>
 					{:else}
-						<Equal class="size-4 text-muted-foreground" />
-						<span class="text-muted-foreground">from last month</span>
+						<Equal class="size-4" />
+						<span>from last month</span>
 					{/if}
 				</div>
 			</CardContent>

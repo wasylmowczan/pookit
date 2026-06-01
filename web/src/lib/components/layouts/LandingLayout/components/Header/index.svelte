@@ -16,7 +16,7 @@
 </script>
 
 <header
-	class="z-50 bg-muted sticky top-0 flex h-16 justify-between items-center gap-4 border-b dark:border-primary px-4 md:px-6"
+	class="z-50 bg-muted sticky top-0 flex h-16 justify-between items-center gap-4 px-4 md:px-6"
 >
 	<div class="flex gap-2 items-center">
 		<Sheet.Root>
@@ -30,7 +30,7 @@
 				<nav class="grid gap-6 text-lg font-medium">
 					<Logo />
 					{#each menuItems as { name, href }}
-						<a {href} class="text-muted-foreground hover:text-foreground">
+						<a {href} class="hover:text-foreground">
 							{name}
 						</a>
 					{/each}
@@ -46,7 +46,7 @@
 			<Button
 				variant="ghost"
 				{href}
-				class="font-bold text-muted-foreground hover:text-foreground transition-colors"
+				class="font-bold hover:text-foreground transition-colors"
 			>
 				{name}
 			</Button>

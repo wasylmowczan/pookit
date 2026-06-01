@@ -17,28 +17,28 @@
 	}
 </script>
 
-<main class="min-h-screen w-full bg-background text-foreground p-6">
+<main class="min-h-screen w-full p-6">
 	<div class="space-y-6">
 		<!-- Header Section -->
 		<div>
 			<h1 class="text-3xl font-bold tracking-tight">Users Dashboard</h1>
-			<p class="text-muted-foreground">Overview of your users and analytics.</p>
+			<p>Overview of your users and analytics.</p>
 		</div>
 		<!-- Stats cards -->
 		<UsersStats {data} />
 
 		<!-- Users table section -->
-		<Card class="dark:border-primary">
+		<Card>
 			<CardHeader>
 				<div class="flex items-center justify-between">
 					<CardTitle
 						>All Users
 						<button onclick={refreshData}>
-							<RefreshIcon class="h-4 w-4 text-muted-foreground" />
+							<RefreshIcon class="h-4 w-4" />
 						</button></CardTitle
 					>
 					<div class="relative w-full max-w-sm">
-						<Search class="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+						<Search class="absolute left-2 top-2.5 h-4 w-4" />
 						<Input bind:value={searchQuery} placeholder="Search users..." class="pl-8" />
 					</div>
 				</div>

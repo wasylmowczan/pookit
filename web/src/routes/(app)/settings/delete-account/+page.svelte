@@ -32,7 +32,7 @@
 	const { form: formData, enhance } = form;
 </script>
 
-<Card class="dark:border-primary">
+<Card>
 	<form action="?/deleteAccount" method="POST" use:enhance>
 		<CardHeader>
 			<CardTitle>Delete Account</CardTitle>
@@ -48,7 +48,7 @@
 				<FormFieldErrors />
 			</FormField>
 		</CardContent>
-		<CardFooter class="border-t px-6 py-4 dark:border-primary">
+		<CardFooter class="border-t px-6 py-4">
 			<Button
 				type="submit"
 				onclick={(e) => !confirm('Are you sure?') && e.preventDefault()}

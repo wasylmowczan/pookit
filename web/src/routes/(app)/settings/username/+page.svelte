@@ -41,7 +41,7 @@
 	const { form: formData, enhance } = form;
 </script>
 
-<Card class="dark:border-primary">
+<Card>
 	<form action="?/updateName" method="POST" use:enhance>
 		<CardHeader>
 			<CardTitle>Change Name</CardTitle>
@@ -57,7 +57,7 @@
 				<FormFieldErrors />
 			</FormField>
 		</CardContent>
-		<CardFooter class="border-t px-6 py-4 dark:border-primary">
+		<CardFooter class="border-t px-6 py-4">
 			<Button type="submit" disabled={loading}>
 				{#if loading}
 					<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />

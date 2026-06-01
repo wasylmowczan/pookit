@@ -35,9 +35,9 @@
 </script>
 
 <div
-	class="w-full min-h-[calc(100vh-10rem)] bg-background text-foreground flex items-center justify-center p-4"
+	class="w-full min-h-[calc(100vh-10rem)] flex items-center justify-center p-4"
 >
-	<Card class="w-full max-w-2xl dark:border-primary">
+	<Card class="w-full max-w-2xl">
 		<CardHeader>
 			<CardTitle>Feedback</CardTitle>
 			<CardDescription>We value your feedback to improve our services</CardDescription>

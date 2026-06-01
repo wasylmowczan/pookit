@@ -13,24 +13,24 @@
 	}
 </script>
 
-<main class="min-h-screen w-full bg-background text-foreground p-6">
+<main class="min-h-screen w-full p-6">
 	<div class="space-y-6">
 		<!-- Header Section -->
 		<div>
 			<h1 class="text-3xl font-bold tracking-tight">Feedbacks</h1>
-			<p class="text-muted-foreground">Overview of your feedbacks and analytics.</p>
+			<p>Overview of your feedbacks and analytics.</p>
 		</div>
 		<!-- Stats cards -->
 		<FeedbackStats {data} />
 
 		<!-- Users table section -->
-		<Card class="dark:border-primary">
+		<Card>
 			<CardHeader>
 				<div class="flex items-center justify-between">
 					<CardTitle
 						>All Feedbacks
 						<button onclick={refreshData}>
-							<RefreshIcon class="h-4 w-4 text-muted-foreground" />
+							<RefreshIcon class="h-4 w-4" />
 						</button></CardTitle
 					>
 				</div>

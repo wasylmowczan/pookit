@@ -31,7 +31,6 @@
 					<Sidebar.MenuButton
 						{...props}
 						size="lg"
-						class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 					>
 						<Avatar.Root>
 							<Avatar.Image src={user.avatar} alt={user.name} />
@@ -46,7 +45,7 @@
 				{/snippet}
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content
-				class="w-[--bits-dropdown-menu-anchor-width] min-w-56 rounded-lg dark:border-primary"
+				class="w-[--bits-dropdown-menu-anchor-width] min-w-56"
 				side={sidebar.isMobile ? 'bottom' : 'right'}
 				align="end"
 				sideOffset={4}
@@ -63,14 +62,14 @@
 						</div>
 					</div>
 				</DropdownMenu.Label>
-				<DropdownMenu.Separator class="dark:bg-primary" />
+				<DropdownMenu.Separator/>
 				<DropdownMenu.Group>
 					<DropdownMenu.Item onclick={() => goto(`/settings/avatar`)}>
 						<CheckIcon />
 						Account
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
-				<DropdownMenu.Separator class="dark:bg-primary" />
+				<DropdownMenu.Separator />
 				<DropdownMenu.Item
 					onclick={async () => {
 						await fetch('/api/logout');

@@ -15,7 +15,7 @@
 	keywords="terms, of, service, terms of service"
 />
 
-<section class="mb-12 p-6 dark:bg-gray-800 rounded-lg">
+<section class="mb-12 p-6 rounded-lg">
 	<h2 class="text-2xl font-semibold mb-4 text-center">Terms & Conditions 📜</h2>
 	<div class="space-y-4">
 		<div>
@@ -94,10 +94,10 @@
 		</div>
 		<div>
 			<h3 class="text-xl font-medium">Contact Information</h3>
-			<p class="text-muted-foreground">
+			<p>
 				If you have questions about these terms, please contact us through our support channels.
 			</p>
 		</div>
 	</div>
-	<p class="mt-4 text-sm text-muted-foreground font-bold">Last Updated: {lastUpdated}</p>
+	<p class="mt-4 text-sm font-bold">Last Updated: {lastUpdated}</p>
 </section>

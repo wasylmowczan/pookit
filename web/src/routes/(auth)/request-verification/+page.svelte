@@ -46,7 +46,7 @@
 <div class="min-h-screen grid lg:grid-cols-2">
 	<!-- Left: Form -->
 	<div class="flex items-center justify-center p-8">
-		<Card class="w-full max-w-sm dark:border-primary">
+		<Card class="w-full max-w-sm">
 			<CardHeader>
 				<CardTitle class="text-2xl">Request Verification</CardTitle>
 			</CardHeader>
@@ -76,7 +76,7 @@
 	</div>
 
 	<!-- Right: Image -->
-	<div class="hidden lg:block relative overflow-hidden bg-muted rounded-l-2xl">
+	<div class="hidden lg:block relative overflow-hidden rounded-l-2xl">
 		<img
 			src="/login.jpg"
 			alt="Request verification visual"

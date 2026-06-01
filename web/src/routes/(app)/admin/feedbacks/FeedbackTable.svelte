@@ -11,10 +11,10 @@
 	let { data }: { data: any } = $props();
 </script>
 
-<div class="rounded-md border dark:border-primary">
-	<Table class="dark:border-primary">
-		<TableHeader class="dark:border-primary">
-			<TableRow class="dark:border-primary">
+<div>
+	<Table>
+		<TableHeader>
+			<TableRow>
 				<TableHead>User</TableHead>
 				<TableHead>Feedback</TableHead>
 				<TableHead>Created</TableHead>

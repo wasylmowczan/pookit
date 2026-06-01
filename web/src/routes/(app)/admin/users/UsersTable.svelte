@@ -32,10 +32,10 @@
 	);
 </script>
 
-<div class="rounded-md border dark:border-primary">
-	<Table class="dark:border-primary">
-		<TableHeader class="dark:border-primary">
-			<TableRow class="dark:border-primary">
+<div>
+	<Table>
+		<TableHeader>
+			<TableRow>
 				<TableHead>User</TableHead>
 				<TableHead>Id</TableHead>
 				<TableHead>Username</TableHead>
@@ -47,8 +47,8 @@
 		</TableHeader>
 		<TableBody>
 			{#each filteredUsers as user}
-				<TableRow class="dark:border-primary">
-					<TableCell class="dark:border-primary">
+				<TableRow>
+					<TableCell>
 						<div class="flex items-center gap-3">
 							{#if user.avatar}
 								<img

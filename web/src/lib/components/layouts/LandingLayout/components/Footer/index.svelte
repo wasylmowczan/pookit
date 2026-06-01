@@ -53,7 +53,7 @@
 			</div>
 			<!-- 2 column -->
 			<div>
-				<h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-6">Product</h3>
+				<h3 class="text-sm font-semibold tracking-wider uppercase mb-6">Product</h3>
 				<ul class="space-y-4">
 					{#each menuItems as { name, href }}
 						<li>
@@ -66,7 +66,7 @@
 			</div>
 			<!-- 3 column -->
 			<div>
-				<h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-6">Legal</h3>
+				<h3 class="text-sm font-semibold tracking-wider uppercase mb-6">Legal</h3>
 				<ul class="space-y-4">
 					{#each legal as { name, href }}
 						<li>
@@ -79,7 +79,7 @@
 			</div>
 			<!-- 4 column -->
 			<div>
-				<h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase mb-6">Other</h3>
+				<h3 class="text-sm font-semibold tracking-wider uppercase mb-6">Other</h3>
 				<ul class="space-y-4">
 					{#each other as { name, href }}
 						<li>
@@ -93,8 +93,8 @@
 		</div>
 	</div>
 	<!-- Footer Copyright -->
-	<div class="mb-8 border-t dark:border-primary pt-8">
-		<p class="text-gray-400 text-center">
+	<div class="mb-8 pt-8">
+		<p class="text-center">
 			&copy; {new Date().getFullYear()}
 			{config.appName}. All rights reserved
 		</p>

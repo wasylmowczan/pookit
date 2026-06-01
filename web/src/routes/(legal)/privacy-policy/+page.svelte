@@ -15,7 +15,7 @@
 	keywords="privacy, policy, privacy policy"
 />
 
-<section class="mb-12 p-6 dark:bg-gray-800 rounded-lg">
+<section class="mb-12 p-6 rounded-lg">
 	<h2 class="text-2xl font-semibold mb-4 text-center">Privacy Policy 🔒</h2>
 	<div class="space-y-4">
 		<div>
@@ -90,5 +90,5 @@
 			</p>
 		</div>
 	</div>
-	<p class="mt-4 text-sm text-muted-foreground font-bold">Last Updated: {lastUpdated}</p>
+	<p class="mt-4 text-sm font-bold">Last Updated: {lastUpdated}</p>
 </section>

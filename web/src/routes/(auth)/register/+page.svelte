@@ -49,7 +49,7 @@
 	<!-- Left: Form -->
 	<div class="flex items-center justify-center p-8">
 		<div class="w-full max-w-sm flex flex-col gap-4">
-			<Card class="w-full dark:border-primary">
+			<Card class="w-full">
 				<CardHeader>
 					<CardTitle class="text-2xl">Register</CardTitle>
 				</CardHeader>
@@ -112,7 +112,7 @@
 	</div>
 
 	<!-- Right: Image -->
-	<div class="hidden lg:block relative overflow-hidden bg-muted rounded-l-2xl">
+	<div class="hidden lg:block relative overflow-hidden rounded-l-2xl">
 		<img
 			src="/login.jpg"
 			alt="Register visual"
