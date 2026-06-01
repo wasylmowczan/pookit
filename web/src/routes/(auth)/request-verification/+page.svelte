@@ -66,7 +66,7 @@
 						</div>
 						<Button disabled={loading} type="submit" class="w-full">Send Email</Button>
 					</div>
-					<div class="mt-4 text-sm text-muted-foreground text-center">Go back to</div>
+					<div class="mt-4 text-sm  text-center">Go back to</div>
 					<div class="text-sm text-center">
 						<a href="/login" class="underline">Login</a>
 					</div>

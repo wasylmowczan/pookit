@@ -15,7 +15,7 @@
 			<div class=" mx-auto px-4 py-8">
 				{@render children?.()}
 				<div class="mb-6">
-					<Button variant="secondary" href="/" class="flex items-center dark:bg-gray-800">
+					<Button variant="secondary" href="/" class="flex items-center">
 						<ArrowLeft class="mr-2 h-4 w-4" />
 						Back to Home
 					</Button>

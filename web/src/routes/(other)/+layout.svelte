@@ -18,7 +18,7 @@
 					<Button
 						variant="secondary"
 						href="/"
-						class="flex items-center max-w-3xl mx-auto dark:bg-gray-800"
+						class="flex items-center max-w-3xl mx-auto"
 					>
 						<ArrowLeft class="mr-2 h-4 w-4" />
 						Back to Home
