@@ -28,7 +28,7 @@
 			logs: [
 				{
 					type: LogType.Improvement,
-					items: ['Added possibility to login using ']
+					items: ['Added possibility to login using one-time code sent to email.']
 				}
 			]
 		},

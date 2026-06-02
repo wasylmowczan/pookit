@@ -342,6 +342,7 @@
 					<!-- ── OTP tab ────────────────────────────────────────── -->
 					<div class="grid gap-4">
 						{#if otpStep === 'email'}
+							<p class="text-sm text-muted-foreground">One-time codes can only be sent to existing accounts.</p>
 							<div class="grid gap-2">
 							<label class="text-sm font-medium leading-none">Email Address</label>
 								<Input
