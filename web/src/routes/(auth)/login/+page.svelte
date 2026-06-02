@@ -143,7 +143,7 @@
 				otpEmail = data.email ?? email;
 				otpStep = 'code';
 				startResendCountdown();
-				toast.success('Code sent — check your email.');
+				toast.success('If this email is registered, a code has been sent.');
 				return;
 			}
 			toast.error(actionError(result) ?? 'Failed to send code.');
@@ -362,8 +362,7 @@
 
 						{:else}
 							<div class="grid gap-1">
-								<p class="text-sm text-muted-foreground">We've sent a 6-digit code to</p>
-								<p class="text-sm font-semibold">{otpEmail}</p>
+							<p class="text-sm text-muted-foreground">If <span class="font-semibold text-foreground">{otpEmail}</span> is registered, a 6-digit code was sent.</p>
 							</div>
 
 							<div class="grid gap-2">

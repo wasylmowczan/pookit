@@ -76,6 +76,6 @@
 		<span>P</span>
 		{@render eye((el) => (eye1El = el), pupil1, `ec1-${uid}`, 'width: 1.1em; height: 1.1em; vertical-align: -0.15em; display: inline-block; margin-right: -0.1em;')}
 		{@render eye((el) => (eye2El = el), pupil2, `ec2-${uid}`, 'width: 1.1em; height: 1.1em; vertical-align: -0.15em; display: inline-block; margin-left: -0.1em;')}
-		<span>kit</span>
+		<span>KIT</span>
 	</span>
 </a>
