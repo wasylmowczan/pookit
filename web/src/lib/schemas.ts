@@ -7,6 +7,19 @@ export const LoginUserSchema = z.object({
 	password: z.string({ error: 'Password is required' })
 });
 
+export const RequestOtpSchema = z.object({
+	email: z.string({ error: 'Email is required' }).email({ message: 'Email must be a valid email' })
+});
+
+export const LoginWithOtpSchema = z.object({
+	otpId: z.string({ error: 'OTP session is required' }).min(1),
+	code: z
+		.string({ error: 'OTP code is required' })
+		.min(6, { message: 'Code must be 6 characters' })
+		.max(12),
+	email: z.string().email().optional()
+});
+
 export const RegisterUserSchema = z
 	.object({
 		email: z

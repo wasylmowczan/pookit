@@ -24,6 +24,15 @@
 
 	const changelog: ChangelogEntry[] = [
 		{
+			date: '2026-06-02',
+			logs: [
+				{
+					type: LogType.Improvement,
+					items: ['Added possibility to login using ']
+				}
+			]
+		},
+		{
 			date: '2026-06-01',
 			logs: [
 				{
