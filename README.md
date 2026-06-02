@@ -69,7 +69,7 @@ SvelteKit SaaS starter kit.
 4. Add environment variables:
 
    ```
-   PUBLIC_BASE_URL=https://svelte-rocks.pages.dev/ // Cloudflare Pages URL
+   PUBLIC_BASE_URL=https://pookit.dev/ // Cloudflare Pages URL
    PUBLIC_PB_URL=https://your-instance.pockethost.io // PB URL, dodaç w Cloudflare
    ```
 
