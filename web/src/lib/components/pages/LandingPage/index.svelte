@@ -3,5 +3,6 @@
 	import { FeaturesSection } from './components';
 </script>
 
+
 <HeroSection />
 <FeaturesSection />
