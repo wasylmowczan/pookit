@@ -9,24 +9,18 @@ export const isAdminUser = (user: User | null | undefined): boolean => {
 	return Boolean(configServer.superAdminEmail) && user.email === configServer.superAdminEmail;
 };
 
-let _superuserPb: PocketBase | null = null;
-
 export const getSuperuserClient = async (): Promise<PocketBase> => {
 	if (!configServer.superAdminEmail || !configServer.superAdminPassword) {
 		throw error(500, 'PocketBase superuser credentials are not configured.');
 	}
 
-	if (_superuserPb?.authStore.isValid) {
-		return _superuserPb;
-	}
+	const pb = new PocketBase(configClient.pbUrl);
 
-	_superuserPb = new PocketBase(configClient.pbUrl);
-
-	await _superuserPb
+	await pb
 		.collection('_superusers')
 		.authWithPassword(configServer.superAdminEmail, configServer.superAdminPassword);
 
-	return _superuserPb;
+	return pb;
 };
 
 export const requireSuperuserClient = async (
