@@ -20,7 +20,7 @@
 		class="flex flex-col items-center text-center lg:items-start lg:text-left gap-8 md:w-1/2 justify-center"
 	>
 		<h1 class="text-4xl font-bold tracking-tighter md:text-5xl lg:text-7xl">
-			True idie hacker boilerplate
+			True indie hacker boilerplate
 		</h1>
 
 		<PointerHighlight
