@@ -3,16 +3,19 @@
 	import NavAdmin from '$lib/components/nav-admin.svelte';
 	import NavSecondary from '$lib/components/nav-secondary.svelte';
 	import NavUser from '$lib/components/nav-user.svelte';
+	import OnboardingWidget from '$lib/components/onboarding-widget.svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import type { ComponentProps } from 'svelte';
 	import Logo from './layouts/LandingLayout/components/Logo.svelte';
+	import type { User } from '$lib/types';
 
 	let {
 		menu,
 		ref = $bindable(null),
 		showNavAdmin,
+		user,
 		...restProps
-	}: ComponentProps<typeof Sidebar.Root> & { menu: any; showNavAdmin?: boolean } = $props();
+	}: ComponentProps<typeof Sidebar.Root> & { menu: any; showNavAdmin?: boolean; user?: User | null } = $props();
 </script>
 
 <Sidebar.Root bind:ref variant="inset" {...restProps}>
@@ -30,7 +33,10 @@
 		{#if showNavAdmin}
 			<NavAdmin navAdmin={menu.navAdmin} />
 		{/if}
-		<NavSecondary items={menu.navSecondary} class="mt-auto" />
+		<div class="mt-auto">
+			<OnboardingWidget {user} />
+			<NavSecondary items={menu.navSecondary} />
+		</div>
 	</Sidebar.Content>
 	<Sidebar.Footer>
 		<NavUser user={menu.user} />

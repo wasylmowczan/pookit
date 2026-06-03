@@ -24,6 +24,15 @@
 
 	const changelog: ChangelogEntry[] = [
 		{
+			date: '2026-06-10',
+			logs: [
+				{
+					type: LogType.Improvement,
+					items: ['Added onboarding widget encouraging users to complete their profile.']
+				}
+			]
+		},
+		{
 			date: '2026-06-02',
 			logs: [
 				{

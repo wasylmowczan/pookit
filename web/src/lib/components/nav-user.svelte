@@ -32,8 +32,8 @@
 						{...props}
 						size="lg"
 					>
-						<Avatar.Root>
-							<Avatar.Image src={user.avatar} alt={user.name} />
+						<Avatar.Root class="rounded-lg">
+							<Avatar.Image src={user.avatar} alt={user.name} class="rounded-lg" />
 							<Avatar.Fallback class="rounded-lg">AV</Avatar.Fallback>
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
@@ -52,8 +52,8 @@
 			>
 				<DropdownMenu.Label class="p-0 font-normal">
 					<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-						<Avatar.Root>
-							<Avatar.Image src={user.avatar} alt={user.name} />
+						<Avatar.Root class="rounded-lg">
+							<Avatar.Image src={user.avatar} alt={user.name} class="rounded-lg" />
 							<Avatar.Fallback class="rounded-lg">AV</Avatar.Fallback>
 						</Avatar.Root>
 						<div class="grid flex-1 text-left text-sm leading-tight">
