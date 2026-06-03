@@ -5,16 +5,7 @@ import type { User } from '$lib/types';
 import { getPostHogClient } from '$lib/server/posthog';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const { hostname, pathname } = event.url;
-
-	if (hostname.startsWith('www.')) {
-		const canonical = new URL(event.request.url);
-		canonical.hostname = hostname.slice(4);
-		return new Response(null, {
-			status: 301,
-			headers: { location: canonical.toString() }
-		});
-	}
+	const { pathname } = event.url;
 
 	if (pathname.startsWith('/ingest')) {
 		const useAssetHost =
