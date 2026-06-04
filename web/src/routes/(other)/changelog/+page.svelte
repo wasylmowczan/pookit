@@ -24,6 +24,15 @@
 
 	const changelog: ChangelogEntry[] = [
 		{
+			date: '2026-06-15',
+			logs: [
+				{
+					type: LogType.Improvement,
+					items: ['Added AI skills docs for Pocketbase, Svelte and Shadcn UI.']
+				}
+			]
+		}
+		{
 			date: '2026-06-10',
 			logs: [
 				{
