@@ -52,6 +52,7 @@
 							name="name"
 							bind:value={$formData.name}
 							placeholder={data.user?.name || data.user?.username}
+							class="placeholder:text-gray-400"
 							required
 						/>
 					</div>
@@ -62,6 +63,7 @@
 							name="email"
 							bind:value={$formData.email}
 							placeholder={data.user?.email}
+							class="placeholder:text-gray-400"
 							required
 						/>
 					</div>
@@ -75,6 +77,7 @@
 								{...props}
 								bind:value={$formData.feedback}
 								placeholder="Please share your thoughts..."
+								class="placeholder:text-gray-400"
 								required
 							/>
 						{/snippet}
