@@ -6,6 +6,8 @@ import { feedbackSchema } from '$lib/schemas';
 import { ClientResponseError } from 'pocketbase';
 import { getSuperuserClient } from '$lib/server/pocketbase-superuser';
 import { getPostHogClient } from '$lib/server/posthog';
+import { sendEmail } from '$lib/server/email';
+import { feedbackConfirmationEmail } from '$lib/server/emails';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	return {
@@ -27,7 +29,7 @@ export const actions: Actions = {
 
 		try {
 			const superuserPb = await getSuperuserClient();
-			await superuserPb.collection('feedback').create({
+			const record = await superuserPb.collection('feedback').create({
 				name: locals.user.id,
 				feedback: form.data.feedback + ' - email: ' + form.data.email + ' - name: ' + form.data.name
 			});
@@ -37,6 +39,21 @@ export const actions: Actions = {
 				distinctId: locals.user.email || locals.user.id,
 				event: 'feedback_submitted'
 			});
+
+			const { subject, html } = feedbackConfirmationEmail({
+				name: form.data.name,
+				feedbackSnippet: form.data.feedback.slice(0, 200)
+			});
+			const emailResult = await sendEmail({
+				to: form.data.email,
+				subject,
+				html,
+				idempotencyKey: `feedback-confirmation/${record.id}`
+			});
+			if (!emailResult.success) {
+				// eslint-disable-next-line no-console
+				console.error('Failed to send feedback confirmation email:', emailResult.error);
+			}
 
 			return { form };
 		} catch (err) {

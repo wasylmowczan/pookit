@@ -4,6 +4,8 @@ import { setError, superValidate } from 'sveltekit-superforms';
 import { zod4 as zod } from 'sveltekit-superforms/adapters';
 import { ClientResponseError } from 'pocketbase';
 import { getPostHogClient } from '$lib/server/posthog';
+import { sendEmail } from '$lib/server/email';
+import { welcomeEmail } from '$lib/server/emails';
 import type { User } from '$lib/types';
 
 export const actions: Actions = {
@@ -17,7 +19,7 @@ export const actions: Actions = {
 
 		try {
 			formData.set('emailVisibility', 'true');
-			await locals.pb.collection('users').create(formData);
+			const user = await locals.pb.collection('users').create(formData);
 			await locals.pb.collection('users').requestVerification(form.data.email);
 
 			const posthog = getPostHogClient();
@@ -26,6 +28,18 @@ export const actions: Actions = {
 				event: 'user_signed_up',
 				properties: { email: form.data.email }
 			});
+
+			const { subject, html } = welcomeEmail({});
+			const emailResult = await sendEmail({
+				to: form.data.email,
+				subject,
+				html,
+				idempotencyKey: `welcome-email/${user.id}`
+			});
+			if (!emailResult.success) {
+				// eslint-disable-next-line no-console
+				console.error('Failed to send welcome email:', emailResult.error);
+			}
 		} catch (err) {
 			if (err instanceof ClientResponseError) {
 				// eslint-disable-next-line no-console

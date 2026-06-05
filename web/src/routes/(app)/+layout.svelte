@@ -9,6 +9,7 @@
 	import SpeechIcon from '$lib/components/icons/common/speech.svelte';
 	import UsersIcon from '$lib/components/icons/common/users.svelte';
 	import TextIcon from '$lib/components/icons/common/text.svelte';
+	import MailCheckIcon from '$lib/components/icons/common/mail-check.svelte';
 	import { config } from '$lib/config-client';
 	import { posthog } from 'posthog-js';
 
@@ -46,6 +47,11 @@
 					name: 'Feedbacks',
 					url: '/admin/feedbacks',
 					icon: SpeechIcon
+				},
+				{
+					name: 'Email Events',
+					url: '/admin/email-events',
+					icon: MailCheckIcon
 				}
 			]
 		},

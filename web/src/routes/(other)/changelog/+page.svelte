@@ -24,16 +24,25 @@
 
 	const changelog: ChangelogEntry[] = [
 		{
-			date: '2026-06-15',
+			date: '2026-06-06',
+			logs: [
+				{
+					type: LogType.NewFeature,
+					items: ['Added full email integration. Admin panel now shows email events like deliveries, bounces, and complaints.']
+				}
+			]
+		},
+		{
+			date: '2026-06-05',
 			logs: [
 				{
 					type: LogType.Improvement,
 					items: ['Added AI skills docs for Pocketbase, Svelte and Shadcn UI.']
 				}
 			]
-		}
+		},
 		{
-			date: '2026-06-10',
+			date: '2026-06-03',
 			logs: [
 				{
 					type: LogType.Improvement,
