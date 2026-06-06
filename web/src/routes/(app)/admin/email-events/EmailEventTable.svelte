@@ -30,7 +30,6 @@
 				<TableHead>To</TableHead>
 				<TableHead>Subject</TableHead>
 				<TableHead>Email ID</TableHead>
-				<TableHead>Date</TableHead>
 			</TableRow>
 		</TableHeader>
 		<TableBody>
@@ -44,7 +43,6 @@
 					<TableCell class="font-medium">{row.to}</TableCell>
 					<TableCell class="max-w-xs truncate">{row.subject}</TableCell>
 					<TableCell class="font-mono text-xs text-muted-foreground">{row.email_id}</TableCell>
-					<TableCell>{new Date(row.created).toLocaleString()}</TableCell>
 				</TableRow>
 			{/each}
 		</TableBody>
