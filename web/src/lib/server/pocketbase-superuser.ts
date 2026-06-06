@@ -9,42 +9,49 @@ export const isAdminUser = (user: User | null | undefined): boolean => {
 	return Boolean(configServer.superAdminEmail) && user.email === configServer.superAdminEmail;
 };
 
-// Cached superuser client — reused across requests until token expires.
-// _pendingAuth deduplicates concurrent re-auth attempts (prevents 429 on rapid navigation).
-let _superuserClient: PocketBase | null = null;
-let _pendingAuth: Promise<PocketBase> | null = null;
+// Cache only the token string — plain value, safe to share across CF Workers requests.
+// A full PocketBase instance holds internal I/O refs tied to one request and cannot be reused.
+let _cachedToken: string | null = null;
+let _pendingAuth: Promise<string> | null = null;
 
 export const getSuperuserClient = async (): Promise<PocketBase> => {
 	if (!configServer.superAdminEmail || !configServer.superAdminPassword) {
 		throw error(500, 'PocketBase superuser credentials are not configured.');
 	}
 
-	if (_superuserClient?.authStore.isValid) {
-		return _superuserClient;
-	}
+	// Always create a fresh PocketBase instance per request (CF Workers I/O isolation)
+	const pb = new PocketBase(configClient.pbUrl);
 
-	// If another request is already authenticating, wait for it instead of making a second call.
-	if (_pendingAuth) {
-		return _pendingAuth;
-	}
-
-	_pendingAuth = (async () => {
-		try {
-			const pb = new PocketBase(configClient.pbUrl);
-			await pb
-				.collection('_superusers')
-				.authWithPassword(configServer.superAdminEmail!, configServer.superAdminPassword!);
-			_superuserClient = pb;
+	if (_cachedToken) {
+		pb.authStore.save(_cachedToken, null);
+		if (pb.authStore.isValid) {
 			return pb;
-		} catch (err) {
-			console.error('[getSuperuserClient] re-auth failed:', err);
-			throw err;
-		} finally {
-			_pendingAuth = null;
 		}
-	})();
+		_cachedToken = null;
+	}
 
-	return _pendingAuth;
+	// Deduplicate concurrent re-auth attempts
+	if (!_pendingAuth) {
+		_pendingAuth = (async () => {
+			try {
+				const authPb = new PocketBase(configClient.pbUrl);
+				await authPb
+					.collection('_superusers')
+					.authWithPassword(configServer.superAdminEmail!, configServer.superAdminPassword!);
+				_cachedToken = authPb.authStore.token;
+				return _cachedToken;
+			} catch (err) {
+				console.error('[getSuperuserClient] re-auth failed:', err);
+				throw err;
+			} finally {
+				_pendingAuth = null;
+			}
+		})();
+	}
+
+	const token = await _pendingAuth;
+	pb.authStore.save(token, null);
+	return pb;
 };
 
 export const requireSuperuserClient = async (
