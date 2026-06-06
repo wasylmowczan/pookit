@@ -36,6 +36,9 @@ export const getSuperuserClient = async (): Promise<PocketBase> => {
 				.authWithPassword(configServer.superAdminEmail!, configServer.superAdminPassword!);
 			_superuserClient = pb;
 			return pb;
+		} catch (err) {
+			console.error('[getSuperuserClient] re-auth failed:', err);
+			throw err;
 		} finally {
 			_pendingAuth = null;
 		}

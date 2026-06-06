@@ -4,9 +4,8 @@ import { ClientResponseError } from 'pocketbase';
 import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const superuserPb = await requireSuperuserClient(locals.user);
-
 	try {
+		const superuserPb = await requireSuperuserClient(locals.user);
 		const data = await superuserPb.collection('users').getFullList({
 			sort: '-created'
 		});

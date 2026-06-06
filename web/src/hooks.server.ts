@@ -27,19 +27,28 @@ export const handle: Handle = async ({ event, resolve }) => {
 			headers.set('x-forwarded-for', clientIp);
 		}
 
-		const response = await fetch(url.toString(), {
-			method: event.request.method,
-			headers,
-			body: event.request.body,
-			// @ts-expect-error - duplex is required for streaming request bodies
-			duplex: 'half'
-		});
-
-		return response;
+		try {
+			const response = await fetch(url.toString(), {
+				method: event.request.method,
+				headers,
+				body: event.request.body,
+				// @ts-expect-error - duplex is required for streaming request bodies
+				duplex: 'half'
+			});
+			return response;
+		} catch (err) {
+			// PostHog endpoint unreachable — don't let tracking failures surface as 500s
+			console.error('[ingest proxy] PostHog fetch failed:', err);
+			return new Response(null, { status: 204 });
+		}
 	}
 
 	event.locals.pb = new PocketBase(config.pbUrl);
-	event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+	try {
+		event.locals.pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+	} catch {
+		// malformed cookie — treat as unauthenticated
+	}
 
 	if (event.locals.pb.authStore.isValid) {
 		try {
@@ -73,17 +82,22 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 export const handleError: HandleServerError = async ({ error, status, message }) => {
-	const posthog = getPostHogClient();
+	console.error('[handleError]', status, message, error);
 
-	posthog.capture({
-		distinctId: 'server',
-		event: 'server_error',
-		properties: {
-			error: error instanceof Error ? error.message : String(error),
-			status,
-			message
-		}
-	});
+	try {
+		const posthog = getPostHogClient();
+		posthog.capture({
+			distinctId: 'server',
+			event: 'server_error',
+			properties: {
+				error: error instanceof Error ? error.message : String(error),
+				status,
+				message
+			}
+		});
+	} catch (posthogErr) {
+		console.error('[handleError] PostHog capture failed:', posthogErr);
+	}
 
 	return {
 		message,
