@@ -40,9 +40,6 @@ export const getSuperuserClient = async (): Promise<PocketBase> => {
 					.authWithPassword(configServer.superAdminEmail!, configServer.superAdminPassword!);
 				_cachedToken = authPb.authStore.token;
 				return _cachedToken;
-			} catch (err) {
-				console.error('[getSuperuserClient] re-auth failed:', err);
-				throw err;
 			} finally {
 				_pendingAuth = null;
 			}

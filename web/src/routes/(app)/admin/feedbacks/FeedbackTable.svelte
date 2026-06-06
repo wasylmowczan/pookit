@@ -15,19 +15,21 @@
 	<Table>
 		<TableHeader>
 			<TableRow>
-				<TableHead>User</TableHead>
+				<TableHead>ID</TableHead>
+				<TableHead>Name</TableHead>
+				<TableHead>Email</TableHead>
 				<TableHead>Feedback</TableHead>
 				<TableHead>Created</TableHead>
-				<TableHead>Updated</TableHead>
 			</TableRow>
 		</TableHeader>
 		<TableBody>
 			{#each data.data as row}
 				<TableRow>
+					<TableCell class="font-mono text-xs">{row.id}</TableCell>
 					<TableCell class="font-medium">{row.name}</TableCell>
+					<TableCell>{row.email}</TableCell>
 					<TableCell>{row.feedback}</TableCell>
 					<TableCell>{row.created}</TableCell>
-					<TableCell>{row.updated}</TableCell>
 				</TableRow>
 			{/each}
 		</TableBody>

@@ -30,8 +30,9 @@ export const actions: Actions = {
 		try {
 			const superuserPb = await getSuperuserClient();
 			const record = await superuserPb.collection('feedback').create({
-				name: locals.user.id,
-				feedback: form.data.feedback + ' - email: ' + form.data.email + ' - name: ' + form.data.name
+				name: form.data.name,
+				email: form.data.email,
+				feedback: form.data.feedback
 			});
 
 			const posthog = getPostHogClient();
