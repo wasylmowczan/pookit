@@ -9,8 +9,10 @@ export const isAdminUser = (user: User | null | undefined): boolean => {
 	return Boolean(configServer.superAdminEmail) && user.email === configServer.superAdminEmail;
 };
 
-// Cached superuser client — reused across requests until token expires
+// Cached superuser client — reused across requests until token expires.
+// _pendingAuth deduplicates concurrent re-auth attempts (prevents 429 on rapid navigation).
 let _superuserClient: PocketBase | null = null;
+let _pendingAuth: Promise<PocketBase> | null = null;
 
 export const getSuperuserClient = async (): Promise<PocketBase> => {
 	if (!configServer.superAdminEmail || !configServer.superAdminPassword) {
@@ -21,14 +23,25 @@ export const getSuperuserClient = async (): Promise<PocketBase> => {
 		return _superuserClient;
 	}
 
-	const pb = new PocketBase(configClient.pbUrl);
+	// If another request is already authenticating, wait for it instead of making a second call.
+	if (_pendingAuth) {
+		return _pendingAuth;
+	}
 
-	await pb
-		.collection('_superusers')
-		.authWithPassword(configServer.superAdminEmail, configServer.superAdminPassword);
+	_pendingAuth = (async () => {
+		try {
+			const pb = new PocketBase(configClient.pbUrl);
+			await pb
+				.collection('_superusers')
+				.authWithPassword(configServer.superAdminEmail!, configServer.superAdminPassword!);
+			_superuserClient = pb;
+			return pb;
+		} finally {
+			_pendingAuth = null;
+		}
+	})();
 
-	_superuserClient = pb;
-	return pb;
+	return _pendingAuth;
 };
 
 export const requireSuperuserClient = async (

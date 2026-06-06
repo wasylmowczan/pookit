@@ -1,12 +1,20 @@
 import type { PageServerLoad } from './$types';
 import { requireSuperuserClient } from '$lib/server/pocketbase-superuser';
+import { ClientResponseError } from 'pocketbase';
+import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const superuserPb = await requireSuperuserClient(locals.user);
 
-	const data = await superuserPb.collection('users').getFullList({
-		sort: '-created'
-	});
-
-	return { data };
+	try {
+		const data = await superuserPb.collection('users').getFullList({
+			sort: '-created'
+		});
+		return { data };
+	} catch (err) {
+		if (err instanceof ClientResponseError) {
+			throw error(err.status || 500, err.message);
+		}
+		throw err;
+	}
 };
