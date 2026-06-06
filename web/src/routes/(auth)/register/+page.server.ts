@@ -6,6 +6,7 @@ import { ClientResponseError } from 'pocketbase';
 import { getPostHogClient } from '$lib/server/posthog';
 import { sendEmail } from '$lib/server/resend';
 import { welcomeEmail } from '$lib/server/emails';
+import { safeRedirect } from '$lib/utils';
 import type { User } from '$lib/types';
 
 export const actions: Actions = {
@@ -55,7 +56,10 @@ export const actions: Actions = {
 			return fail(400, { form });
 		}
 
-		redirect(303, `/login`);
+		// Forward the post-auth redirect target through the verification → login flow.
+		const target = safeRedirect(formData.get('redirect')?.toString(), '');
+		const loginUrl = target ? `/login?redirect=${encodeURIComponent(target)}` : '/login';
+		redirect(303, loginUrl);
 	},
 
 	loginWithGoogle: async ({ request, locals }) => {

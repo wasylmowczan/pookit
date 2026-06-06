@@ -1,8 +1,20 @@
-<script>
+<script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Check from '@lucide/svelte/icons/check';
 
-	let { pricingList } = $props();
+	let {
+		pricingList,
+		proProductId,
+		proCtaLabel = 'Get Started'
+	} = $props<{
+		pricingList: { free: string[]; pro: string[] };
+		proProductId?: string;
+		proCtaLabel?: string;
+	}>();
+
+	const proHref = $derived(
+		proProductId ? `/api/checkout?product=${encodeURIComponent(proProductId)}` : '/register'
+	);
 </script>
 
 <section class="py-16 md:py-32">
@@ -26,7 +38,7 @@
 						<p class="text-sm text-muted-foreground">Try it out and share your opinion.</p>
 					</div>
 
-					<Button href="/" variant="outline" class="w-full">Get Started</Button>
+					<Button href="/register" variant="outline" class="w-full">Get Started</Button>
 
 					<hr class="border-dashed" />
 
@@ -52,7 +64,7 @@
 							<p class="text-sm text-muted-foreground">Perfect for Indie Hackers.</p>
 						</div>
 
-						<Button href="/" class="w-full">Get Started</Button>
+						<Button href={proHref} class="w-full">{proCtaLabel}</Button>
 					</div>
 
 					<div>

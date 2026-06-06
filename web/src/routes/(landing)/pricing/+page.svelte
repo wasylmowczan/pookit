@@ -18,4 +18,4 @@
 	};
 </script>
 
-<PricingPage pricingList={defaultPricingList} />
+<PricingPage pricingList={defaultPricingList} proProductId={data.proProductId ?? undefined} />

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CheckIcon from '$lib/components/icons/common/check.svelte';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+	import CreditCard from '@lucide/svelte/icons/credit-card';
 	import LogOut from '@lucide/svelte/icons/log-out';
 
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
@@ -28,10 +29,7 @@
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
 				{#snippet child({ props })}
-					<Sidebar.MenuButton
-						{...props}
-						size="lg"
-					>
+					<Sidebar.MenuButton {...props} size="lg">
 						<Avatar.Root class="rounded-lg">
 							<Avatar.Image src={user.avatar} alt={user.name} class="rounded-lg" />
 							<Avatar.Fallback class="rounded-lg">AV</Avatar.Fallback>
@@ -62,11 +60,15 @@
 						</div>
 					</div>
 				</DropdownMenu.Label>
-				<DropdownMenu.Separator/>
+				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
 					<DropdownMenu.Item onclick={() => goto(`/settings/avatar`)}>
 						<CheckIcon />
 						Account
+					</DropdownMenu.Item>
+					<DropdownMenu.Item onclick={() => goto(`/billing`)}>
+						<CreditCard />
+						Billing
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />

@@ -13,6 +13,8 @@
 		"format": "prettier --write ."
 	},
 	"dependencies": {
+		"@polar-sh/sdk": "^0.48.0",
+		"@polar-sh/sveltekit": "^0.7.6",
 		"@sveltejs/kit": "^2.60.1",
 		"ogl": "^1.0.11",
 		"pocketbase": "^0.26.9",

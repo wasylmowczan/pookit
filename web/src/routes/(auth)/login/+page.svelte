@@ -21,7 +21,13 @@
 	import { toast } from 'svelte-sonner';
 	import { zod4 as zod } from 'sveltekit-superforms/adapters';
 	import { defaultValues, superForm } from 'sveltekit-superforms';
-
+	let { data } = $props();
+	const redirectTo = $derived(data?.redirectTo ?? '/dashboard');
+	const registerHref = $derived(
+		redirectTo && redirectTo !== '/dashboard'
+			? `/register?redirect=${encodeURIComponent(redirectTo)}`
+			: '/register'
+	);
 	// ── auth mode ────────────────────────────────────────────────────────────
 	type AuthMode = 'password' | 'otp';
 	let authMode = $state<AuthMode>('password');
@@ -57,7 +63,9 @@
 	// ── password form ─────────────────────────────────────────────────────────
 	const form = superForm(defaultValues(zod(LoginUserSchema)), {
 		validators: zod(LoginUserSchema),
-		onSubmit: () => { loading = true; },
+		onSubmit: () => {
+			loading = true;
+		},
 		onResult: ({ result }) => {
 			loading = false;
 			if (result.type === 'success') {
@@ -78,7 +86,9 @@
 
 	const { form: formData, enhance } = form;
 
-	function togglePasswordVisibility() { showPassword = !showPassword; }
+	function togglePasswordVisibility() {
+		showPassword = !showPassword;
+	}
 
 	// ── tab switch ────────────────────────────────────────────────────────────
 	function setMode(mode: AuthMode) {
@@ -138,7 +148,10 @@
 			const result = await postAction('?/requestOtp', fd);
 			if (result.type === 'success') {
 				const data = result.data as { otpId?: string; email?: string };
-				if (!data.otpId) { toast.error('Could not start OTP login. Try again.'); return; }
+				if (!data.otpId) {
+					toast.error('Could not start OTP login. Try again.');
+					return;
+				}
 				otpId = data.otpId;
 				otpEmail = data.email ?? email;
 				otpStep = 'code';
@@ -155,8 +168,14 @@
 	}
 
 	async function handleVerifyOtp() {
-		if (!otpId) { toast.error('Request a code first.'); return; }
-		if (otpCode.trim().length < 6) { toast.error('Enter the 6-digit code.'); return; }
+		if (!otpId) {
+			toast.error('Request a code first.');
+			return;
+		}
+		if (otpCode.trim().length < 6) {
+			toast.error('Enter the 6-digit code.');
+			return;
+		}
 
 		otpLoginLoading = true;
 		const fd = new FormData();
@@ -171,7 +190,7 @@
 				localStorage.setItem('lastAuthMethod', 'otp');
 				toast.success('Logged in successfully.');
 				redirecting = true;
-				window.location.href = '/dashboard';
+				window.location.href = redirectTo;
 				return;
 			}
 			toast.error(actionError(result) ?? 'OTP login failed.');
@@ -184,10 +203,15 @@
 
 	// ── Google ────────────────────────────────────────────────────────────────
 	function handleGoogleLogin() {
-		const w = 600, h = 700;
+		const w = 600,
+			h = 700;
 		const left = Math.round(window.screenX + (window.outerWidth - w) / 2);
 		const top = Math.round(window.screenY + (window.outerHeight - h) / 2);
-		const popup = window.open('', 'google-auth', `width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`);
+		const popup = window.open(
+			'',
+			'google-auth',
+			`width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`
+		);
 
 		googleLoading = true;
 		const pb = new PocketBase(config.pbUrl);
@@ -196,7 +220,12 @@
 				provider: 'google',
 				urlCallback(url) {
 					if (popup) popup.location.href = url;
-					else window.open(url, 'google-auth', `width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`);
+					else
+						window.open(
+							url,
+							'google-auth',
+							`width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`
+						);
 				}
 			})
 			.then(async (authData) => {
@@ -209,13 +238,16 @@
 					toast.success('Logged in successfully.');
 					localStorage.setItem('lastAuthMethod', 'google');
 					redirecting = true;
-					window.location.href = '/dashboard';
+					window.location.href = redirectTo;
 				} else {
 					toast.error('Google login failed.');
 					googleLoading = false;
 				}
 			})
-			.catch(() => { toast.error('Google login failed.'); googleLoading = false; });
+			.catch(() => {
+				toast.error('Google login failed.');
+				googleLoading = false;
+			});
 	}
 </script>
 
@@ -260,7 +292,10 @@
 					>
 						One-Time Passcode
 						{#if lastAuthMethod === 'otp'}
-							<span class="ml-1 text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none">Last used</span>
+							<span
+								class="ml-1 text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none"
+								>Last used</span
+							>
 						{/if}
 					</button>
 				</div>
@@ -302,7 +337,9 @@
 												class="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
 												onclick={togglePasswordVisibility}
 											>
-												{#if showPassword}<EyeOff class="h-4 w-4" />{:else}<Eye class="h-4 w-4" />{/if}
+												{#if showPassword}<EyeOff class="h-4 w-4" />{:else}<Eye
+														class="h-4 w-4"
+													/>{/if}
 												<span class="sr-only">{showPassword ? 'Hide' : 'Show'} password</span>
 											</Button>
 										</div>
@@ -319,32 +356,46 @@
 						</Button>
 
 						<div class="relative my-1">
-							<div class="absolute inset-0 flex items-center"><span class="w-full border-t"></span></div>
+							<div class="absolute inset-0 flex items-center">
+								<span class="w-full border-t"></span>
+							</div>
 							<div class="relative flex justify-center text-xs uppercase">
 								<span class="bg-card px-2 text-muted-foreground">or continue with</span>
 							</div>
 						</div>
 
-						<Button type="button" variant="outline" class="w-full" disabled={googleLoading} onclick={handleGoogleLogin}>
+						<Button
+							type="button"
+							variant="outline"
+							class="w-full"
+							disabled={googleLoading}
+							onclick={handleGoogleLogin}
+						>
 							<Google class="mr-2 h-4 w-4" />
 							{googleLoading ? 'Connecting…' : 'Google'}
 							{#if lastAuthMethod === 'google'}
-								<span class="ml-auto text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none">Last used</span>
+								<span
+									class="ml-auto text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none"
+									>Last used</span
+								>
 							{/if}
 						</Button>
 
 						<p class="text-sm text-center text-muted-foreground">
-							Don't have an account? <a href="/register" class="underline text-foreground">Register</a>
+							Don't have an account? <a href={registerHref} class="underline text-foreground"
+								>Register</a
+							>
 						</p>
 					</form>
-
 				{:else}
 					<!-- ── OTP tab ────────────────────────────────────────── -->
 					<div class="grid gap-4">
 						{#if otpStep === 'email'}
-							<p class="text-sm text-muted-foreground">One-time codes can only be sent to existing accounts.</p>
+							<p class="text-sm text-muted-foreground">
+								One-time codes can only be sent to existing accounts.
+							</p>
 							<div class="grid gap-2">
-							<label class="text-sm font-medium leading-none">Email Address</label>
+								<label class="text-sm font-medium leading-none">Email Address</label>
 								<Input
 									type="email"
 									placeholder="you@example.com"
@@ -360,14 +411,16 @@
 							>
 								{otpRequestLoading ? 'Sending…' : 'Send OTP'}
 							</Button>
-
 						{:else}
 							<div class="grid gap-1">
-							<p class="text-sm text-muted-foreground">If <span class="font-semibold text-foreground">{otpEmail}</span> is registered, a 6-digit code was sent.</p>
+								<p class="text-sm text-muted-foreground">
+									If <span class="font-semibold text-foreground">{otpEmail}</span> is registered, a 6-digit
+									code was sent.
+								</p>
 							</div>
 
 							<div class="grid gap-2">
-							<label class="text-sm font-medium leading-none">Enter OTP</label>
+								<label class="text-sm font-medium leading-none">Enter OTP</label>
 								<Input
 									placeholder="000000"
 									maxlength={6}
@@ -411,22 +464,35 @@
 						{/if}
 
 						<div class="relative my-1">
-							<div class="absolute inset-0 flex items-center"><span class="w-full border-t"></span></div>
+							<div class="absolute inset-0 flex items-center">
+								<span class="w-full border-t"></span>
+							</div>
 							<div class="relative flex justify-center text-xs uppercase">
 								<span class="bg-card px-2 text-muted-foreground">or continue with</span>
 							</div>
 						</div>
 
-						<Button type="button" variant="outline" class="w-full" disabled={googleLoading} onclick={handleGoogleLogin}>
+						<Button
+							type="button"
+							variant="outline"
+							class="w-full"
+							disabled={googleLoading}
+							onclick={handleGoogleLogin}
+						>
 							<Google class="mr-2 h-4 w-4" />
 							{googleLoading ? 'Connecting…' : 'Google'}
 							{#if lastAuthMethod === 'google'}
-								<span class="ml-auto text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none">Last used</span>
+								<span
+									class="ml-auto text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none"
+									>Last used</span
+								>
 							{/if}
 						</Button>
 
 						<p class="text-sm text-center text-muted-foreground">
-							Don't have an account? <a href="/register" class="underline text-foreground">Register</a>
+							Don't have an account? <a href={registerHref} class="underline text-foreground"
+								>Register</a
+							>
 						</p>
 					</div>
 				{/if}

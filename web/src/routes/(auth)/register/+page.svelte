@@ -19,6 +19,14 @@
 	import Google from '$lib/components/icons/brands/Google.svelte';
 	import { onMount } from 'svelte';
 
+	let { data } = $props();
+	const redirectTo = $derived(data?.redirectTo ?? '/dashboard');
+	const loginHref = $derived(
+		redirectTo && redirectTo !== '/dashboard'
+			? `/login?redirect=${encodeURIComponent(redirectTo)}`
+			: '/login'
+	);
+
 	let loading = $state(false);
 	let googleLoading = $state(false);
 	let redirecting = $state(false);
@@ -51,10 +59,15 @@
 	function handleGoogleLogin() {
 		// Open popup synchronously in the click handler so browsers treat it as
 		// user-initiated (prevents it from opening as a new tab instead of a popup).
-		const w = 600, h = 700;
+		const w = 600,
+			h = 700;
 		const left = Math.round(window.screenX + (window.outerWidth - w) / 2);
 		const top = Math.round(window.screenY + (window.outerHeight - h) / 2);
-		const popup = window.open('', 'google-auth', `width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`);
+		const popup = window.open(
+			'',
+			'google-auth',
+			`width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`
+		);
 
 		googleLoading = true;
 		const pb = new PocketBase(config.pbUrl);
@@ -65,7 +78,11 @@
 					if (popup) {
 						popup.location.href = url;
 					} else {
-						window.open(url, 'google-auth', `width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`);
+						window.open(
+							url,
+							'google-auth',
+							`width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`
+						);
 					}
 				}
 			})
@@ -81,7 +98,7 @@
 					toast.success('Signed in with Google.');
 					localStorage.setItem('lastAuthMethod', 'google');
 					redirecting = true;
-					window.location.href = '/dashboard';
+					window.location.href = redirectTo;
 				} else {
 					toast.error('Google sign-in failed.');
 					googleLoading = false;
@@ -114,6 +131,9 @@
 				</CardHeader>
 				<CardContent>
 					<form action="?/register" method="POST" use:enhance>
+						{#if redirectTo && redirectTo !== '/dashboard'}
+							<input type="hidden" name="redirect" value={redirectTo} />
+						{/if}
 						<div class="grid gap-4">
 							<div class="grid gap-2">
 								<FormField {form} name="email">
@@ -149,26 +169,33 @@
 								</FormField>
 							</div>
 							<Button disabled={loading} type="submit" class="w-full">Create Account</Button>
-						</div>					<div class="relative my-4">
-						<div class="absolute inset-0 flex items-center"><span class="w-full border-t"></span></div>
-						<div class="relative flex justify-center text-xs uppercase">
-							<span class="bg-card px-2 text-muted-foreground">Or continue with</span>
 						</div>
-					</div>
-					<Button
-						type="button"
-						variant="outline"
-						class="w-full"
-						disabled={googleLoading}
-						onclick={handleGoogleLogin}
-					>
-						<Google class="mr-2 h-4 w-4" />
-						{googleLoading ? 'Connecting...' : 'Google'}
-						{#if lastAuthMethod === 'google'}
-							<span class="ml-auto text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none">Last used</span>
-						{/if}
-					</Button>						<div class="mt-4 text-sm text-center">
-							Already have an account? <a href="/login" class="underline">Login</a>
+						<div class="relative my-4">
+							<div class="absolute inset-0 flex items-center">
+								<span class="w-full border-t"></span>
+							</div>
+							<div class="relative flex justify-center text-xs uppercase">
+								<span class="bg-card px-2 text-muted-foreground">Or continue with</span>
+							</div>
+						</div>
+						<Button
+							type="button"
+							variant="outline"
+							class="w-full"
+							disabled={googleLoading}
+							onclick={handleGoogleLogin}
+						>
+							<Google class="mr-2 h-4 w-4" />
+							{googleLoading ? 'Connecting...' : 'Google'}
+							{#if lastAuthMethod === 'google'}
+								<span
+									class="ml-auto text-[10px] font-medium bg-primary/10 text-primary rounded-full px-1.5 py-0.5 leading-none"
+									>Last used</span
+								>
+							{/if}
+						</Button>
+						<div class="mt-4 text-sm text-center">
+							Already have an account? <a href={loginHref} class="underline">Login</a>
 						</div>
 					</form>
 				</CardContent>
