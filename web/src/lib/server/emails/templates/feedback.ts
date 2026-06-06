@@ -1,4 +1,4 @@
-import { baseLayout, heading, para, divider, tokens } from './base';
+import { baseLayout, heading, para, divider, tokens } from '../base';
 
 export type FeedbackConfirmationEmailData = {
 	name: string;

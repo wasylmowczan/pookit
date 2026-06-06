@@ -1,4 +1,4 @@
-import { baseLayout, button, heading, para, divider } from './base';
+import { baseLayout, button, heading, para, divider } from '../base';
 
 export type WelcomeEmailData = {
 	name?: string;

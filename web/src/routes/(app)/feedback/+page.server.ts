@@ -6,7 +6,7 @@ import { feedbackSchema } from '$lib/schemas';
 import { ClientResponseError } from 'pocketbase';
 import { getSuperuserClient } from '$lib/server/pocketbase-superuser';
 import { getPostHogClient } from '$lib/server/posthog';
-import { sendEmail } from '$lib/server/email';
+import { sendEmail } from '$lib/server/resend';
 import { feedbackConfirmationEmail } from '$lib/server/emails';
 
 export const load: PageServerLoad = async ({ locals }) => {

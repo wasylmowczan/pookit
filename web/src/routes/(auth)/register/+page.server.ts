@@ -4,7 +4,7 @@ import { setError, superValidate } from 'sveltekit-superforms';
 import { zod4 as zod } from 'sveltekit-superforms/adapters';
 import { ClientResponseError } from 'pocketbase';
 import { getPostHogClient } from '$lib/server/posthog';
-import { sendEmail } from '$lib/server/email';
+import { sendEmail } from '$lib/server/resend';
 import { welcomeEmail } from '$lib/server/emails';
 import type { User } from '$lib/types';
 
