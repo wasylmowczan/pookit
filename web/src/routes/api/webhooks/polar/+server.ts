@@ -1,4 +1,5 @@
 import { Webhooks } from '@polar-sh/sveltekit';
+import type { RequestHandler } from './$types';
 import { config } from '$lib/config-server';
 import { getSuperuserClient } from '$lib/server/pocketbase-superuser';
 
@@ -70,7 +71,21 @@ function toIsoDate(value: unknown): string | undefined {
 	return undefined;
 }
 
-export const POST = Webhooks({
+// Set of event types we actually handle. For everything else we ack with 200
+// (after signature verification) so Polar doesn't retry for events we don't care
+// about, and so SDK-side schema mismatches on unhandled types can't break us.
+const HANDLED_EVENT_TYPES = new Set([
+	'subscription.created',
+	'subscription.updated',
+	'subscription.canceled',
+	'subscription.revoked',
+	'order.paid',
+	'order.refunded',
+	'customer.created',
+	'customer.updated'
+]);
+
+const polarWebhooks = Webhooks({
 	webhookSecret: config.polarWebhookSecret ?? '',
 
 	onSubscriptionCreated: async (payload) => {
@@ -176,3 +191,45 @@ export const POST = Webhooks({
 		await cachePolarCustomerOnUser(pb, externalId, customer.id);
 	}
 });
+
+export const POST: RequestHandler = async (event) => {
+	if (!config.polarWebhookSecret) {
+		console.error('[polar] POLAR_WEBHOOK_SECRET is not configured');
+		return new Response(JSON.stringify({ error: 'webhook_secret_not_configured' }), {
+			status: 503,
+			headers: { 'content-type': 'application/json' }
+		});
+	}
+
+	// Peek at the event type so we can decide how to react if the SDK throws
+	// while parsing/verifying. Reading the body twice is fine — the adapter
+	// re-reads via event.request.text() and we clone here.
+	let eventType: string | undefined;
+	try {
+		const cloned = event.request.clone();
+		const json = (await cloned.json()) as { type?: string };
+		eventType = json?.type;
+	} catch {
+		// Body wasn't JSON or already consumed — let the adapter handle it.
+	}
+
+	try {
+		return await polarWebhooks(event);
+	} catch (err) {
+		// SDK validation errors on event types we don't handle: just ack so Polar
+		// stops retrying. Real handler errors (which we DO want retried) will only
+		// happen for events in HANDLED_EVENT_TYPES, so we surface those as 500.
+		if (eventType && !HANDLED_EVENT_TYPES.has(eventType)) {
+			console.warn(
+				`[polar] Ignored unhandled event "${eventType}" (SDK parse/verify error):`,
+				err instanceof Error ? err.message : err
+			);
+			return new Response(JSON.stringify({ received: true, ignored: eventType }), {
+				status: 200,
+				headers: { 'content-type': 'application/json' }
+			});
+		}
+		console.error('[polar] Webhook handler error:', err);
+		throw err;
+	}
+};
