@@ -2,19 +2,32 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Check from '@lucide/svelte/icons/check';
 
+	type ProPlan = {
+		id: string;
+		name: string;
+		priceLabel: string;
+		description: string | null;
+	};
+
 	let {
 		pricingList,
 		proProductId,
+		proPlan,
 		proCtaLabel = 'Get Started'
 	} = $props<{
 		pricingList: { free: string[]; pro: string[] };
 		proProductId?: string;
+		proPlan?: ProPlan;
 		proCtaLabel?: string;
 	}>();
 
 	const proHref = $derived(
 		proProductId ? `/api/checkout?product=${encodeURIComponent(proProductId)}` : '/register'
 	);
+
+	const proName = $derived(proPlan?.name ?? 'Pro');
+	const proPriceLabel = $derived(proPlan?.priceLabel ?? '$99');
+	const proTagline = $derived(proPlan?.description ?? 'Perfect for Indie Hackers.');
 </script>
 
 <section class="py-16 md:py-32">
@@ -59,9 +72,9 @@
 				<div class="grid gap-6 sm:grid-cols-2">
 					<div class="space-y-4">
 						<div>
-							<h2 class="font-medium">Pro</h2>
-							<span class="my-3 block text-2xl font-semibold">$99</span>
-							<p class="text-sm text-muted-foreground">Perfect for Indie Hackers.</p>
+							<h2 class="font-medium">{proName}</h2>
+							<span class="my-3 block text-2xl font-semibold">{proPriceLabel}</span>
+							<p class="text-sm text-muted-foreground">{proTagline}</p>
 						</div>
 
 						<Button href={proHref} class="w-full">{proCtaLabel}</Button>
