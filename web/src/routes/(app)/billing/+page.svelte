@@ -73,8 +73,8 @@
 		<Card>
 			<CardContent class="py-4">
 				{#if activePlan}
-					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-						<div class="space-y-1">
+					<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+						<div class="space-y-3">
 							<div class="flex items-center gap-2">
 								<span class="font-semibold">{activePlan.product_name || 'Pro'}</span>
 								{#if isSubscription}
@@ -86,20 +86,40 @@
 									<Badge variant="default">Purchased</Badge>
 								{/if}
 							</div>
-							<p class="text-sm text-muted-foreground">
-								{#if isSubscription}
-									{formatAmount(sub!.amount, sub!.currency)} / {String(
-										sub!.recurring_interval ?? 'month'
-									)}
-									{#if sub!.current_period_end}
-										· Renews on {formatDate(sub!.current_period_end)}
+
+							{#if isSubscription}
+								<dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm">
+									<dt class="text-muted-foreground">Price</dt>
+									<dd class="font-medium">
+										{formatAmount(sub!.amount, sub!.currency)} / {String(sub!.recurring_interval ?? 'month')}
+									</dd>
+
+									{#if sub!.current_period_start || sub!.current_period_end}
+										<dt class="text-muted-foreground">Current period</dt>
+										<dd class="font-medium">
+											{#if sub!.current_period_start}
+												{formatDate(sub!.current_period_start)} →
+											{/if}
+											{#if sub!.current_period_end}
+												{formatDate(sub!.current_period_end)}
+											{/if}
+										</dd>
 									{/if}
-								{:else}
+
+									{#if sub!.current_period_end && !sub!.cancel_at_period_end}
+										<dt class="text-muted-foreground">Next payment</dt>
+										<dd class="font-medium">
+											{formatAmount(sub!.amount, sub!.currency)} on {formatDate(sub!.current_period_end)}
+										</dd>
+									{/if}
+								</dl>
+							{:else}
+								<p class="text-sm text-muted-foreground">
 									{formatAmount(order!.amount, order!.currency)} · One-time purchase
-								{/if}
-							</p>
+								</p>
+							{/if}
 						</div>
-						<Button href="/api/portal" variant="outline">Manage billing</Button>
+						<Button href="/api/portal" variant="outline" class="shrink-0">Manage billing</Button>
 					</div>
 				{:else}
 					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
