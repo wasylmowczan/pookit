@@ -4,6 +4,25 @@ import { config } from '$lib/config-server';
 import { getSuperuserClient } from '$lib/server/pocketbase-superuser';
 import { ClientResponseError } from 'pocketbase';
 
+// CF Workers does not ship Buffer unless nodejs_compat is enabled.
+// The Polar SDK's validateEvent needs only Buffer.from(str,"utf-8").toString("base64"),
+// so this minimal shim is enough.
+if (typeof globalThis.Buffer === 'undefined') {
+	Object.assign(globalThis, {
+		Buffer: {
+			from: (input: string, _enc?: string) => ({
+				toString: (enc?: string) => {
+					if (enc !== 'base64') return input;
+					const bytes = new TextEncoder().encode(input);
+					let bin = '';
+					bytes.forEach((b) => (bin += String.fromCharCode(b)));
+					return btoa(bin);
+				}
+			})
+		}
+	});
+}
+
 type WithExternalId = { externalId?: string | null; external_id?: string | null };
 
 async function findUserId(
