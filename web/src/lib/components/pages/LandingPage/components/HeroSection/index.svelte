@@ -50,7 +50,7 @@
 			</Button>
 		</div>
 	</div>
-	<div class="flex justify-center items-center md:w-1/2">
+	<div class="hidden md:flex justify-center items-center md:w-1/2">
 		<InteractiveGrid
 			image={heroimageLight}
 			class="min-h-[500px] w-full dark:hidden"
