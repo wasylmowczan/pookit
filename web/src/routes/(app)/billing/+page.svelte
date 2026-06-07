@@ -88,7 +88,9 @@
 							</div>
 							<p class="text-sm text-muted-foreground">
 								{#if isSubscription}
-									{formatAmount(sub!.amount, sub!.currency)} / {String(sub!.recurring_interval ?? 'month')}
+									{formatAmount(sub!.amount, sub!.currency)} / {String(
+										sub!.recurring_interval ?? 'month'
+									)}
 									{#if sub!.current_period_end}
 										· Renews on {formatDate(sub!.current_period_end)}
 									{/if}
@@ -224,7 +226,7 @@
 		{:else}
 			<!-- Multi-product grid -->
 			<div
-				class="grid gap-4"
+				class="grid gap-4 pt-4"
 				class:md:grid-cols-2={productCount === 2}
 				class:lg:grid-cols-3={productCount >= 3}
 			>
@@ -234,12 +236,10 @@
 					{@const checkoutHref = `/api/checkout?product=${encodeURIComponent(product.id)}`}
 					{@const isHighlighted = !isCurrent && productCount >= 2 && i === productCount - 1}
 
-					<Card class={isHighlighted ? 'border-primary shadow-lg relative' : 'relative'}>
+					<Card class={isHighlighted ? 'border-primary shadow-lg relative overflow-visible' : 'relative'}>
 						{#if isHighlighted}
-							<div
-								class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground"
-							>
-								Most popular
+							<div class="absolute -top-3 left-1/2 -translate-x-1/2">
+								<Badge variant="default" class="px-3 py-0.5 text-xs shadow-sm">Most popular</Badge>
 							</div>
 						{/if}
 
