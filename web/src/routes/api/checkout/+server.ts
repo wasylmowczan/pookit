@@ -36,6 +36,13 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			customerName: locals.user.name || locals.user.username || undefined
 		});
 		checkoutUrl = checkout.url;
+
+		if (checkout.customerId && !locals.user.polar_customer_id) {
+			locals.pb
+				.collection('users')
+				.update(locals.user.id, { polar_customer_id: checkout.customerId })
+				.catch((err) => console.warn('[polar] Failed to cache polar_customer_id on checkout:', err));
+		}
 	} catch (err) {
 		console.error('[polar] Failed to create checkout:', err);
 		return new Response('Failed to create checkout session', { status: 500 });

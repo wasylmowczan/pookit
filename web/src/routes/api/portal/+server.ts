@@ -23,6 +23,13 @@ export const GET: RequestHandler = async ({ locals }) => {
 			externalCustomerId: locals.user.id
 		});
 		portalUrl = session.customerPortalUrl;
+
+		if (session.customerId && !locals.user.polar_customer_id) {
+			locals.pb
+				.collection('users')
+				.update(locals.user.id, { polar_customer_id: session.customerId })
+				.catch((err) => console.warn('[polar] Failed to cache polar_customer_id on portal:', err));
+		}
 	} catch (err) {
 		// Most common cause: user hasn't checked out yet, so Polar has no customer for them.
 		console.error('[polar] Failed to create customer portal session:', err);
