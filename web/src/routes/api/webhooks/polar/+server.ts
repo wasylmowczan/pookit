@@ -238,12 +238,23 @@ export const POST: RequestHandler = async (event) => {
 				headers: { 'content-type': 'application/json' }
 			});
 		}
-		console.error('[polar] Webhook handler error for event:', eventType);
-		console.error('[polar] Error type:', err?.constructor?.name);
-		console.error('[polar] Error:', err instanceof Error ? err.message : err);
-		if (err instanceof ClientResponseError) {
-			console.error('[polar] PocketBase status:', err.status, 'response:', JSON.stringify(err.response));
-		}
-		throw err;
+		const errMessage = err instanceof Error ? err.message : String(err);
+		const pbDetail =
+			err instanceof ClientResponseError
+				? { pb_status: err.status, pb_response: err.response }
+				: undefined;
+
+		console.error('[polar] Webhook handler error for event:', eventType, errMessage, pbDetail);
+
+		// Return a structured 500 so the Polar dashboard shows the error detail.
+		return new Response(
+			JSON.stringify({
+				error: errMessage,
+				event: eventType,
+				type: err?.constructor?.name,
+				...pbDetail
+			}),
+			{ status: 500, headers: { 'content-type': 'application/json' } }
+		);
 	}
 };
