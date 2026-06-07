@@ -12,6 +12,4 @@
 		"moduleResolution": "bundler",
 		"ignoreDeprecations": "5.0"
 	},
-	"include": ["src/**/*", "./.svelte-kit/ambient.d.ts"],
-	"exclude": ["node_modules", ".svelte-kit"]
 }

@@ -97,7 +97,7 @@ export const actions: Actions = {
 
 			const email =
 				parsed.data.email ||
-				((locals.pb.authStore.model as Partial<User> | null)?.email ?? 'unknown');
+				((locals.pb.authStore.record as Partial<User> | null)?.email ?? 'unknown');
 
 			const posthog = getPostHogClient();
 			posthog.capture({

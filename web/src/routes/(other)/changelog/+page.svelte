@@ -24,11 +24,24 @@
 
 	const changelog: ChangelogEntry[] = [
 		{
+			date: '2026-06-07',
+			logs: [
+				{
+					type: LogType.NewFeature,
+					items: [
+						'Added Polar integration. Now users can have subscriptions and one-time purchases. Added Billing page where users can see their active plan and purchase history.'
+					]
+				}
+			]
+		},
+		{
 			date: '2026-06-06',
 			logs: [
 				{
 					type: LogType.NewFeature,
-					items: ['Added full email integration. Admin panel now shows email events like deliveries, bounces, and complaints.']
+					items: [
+						'Added full email integration. Admin panel now shows email events like deliveries, bounces, and complaints.'
+					]
 				}
 			]
 		},

@@ -2,7 +2,7 @@
 	import { Select as SelectPrimitive } from "bits-ui";
 	import { cn } from "$lib/utils.js";
 
-	type $$Props = SelectPrimitive.LabelProps;
+	type $$Props = SelectPrimitive.GroupHeadingProps;
 
 	interface Props {
 		class?: $$Props["class"];
@@ -11,12 +11,12 @@
 	}
 
 	let { class: className = undefined, children, ...rest }: Props = $props();
-	
+
 </script>
 
-<SelectPrimitive.Label
+<SelectPrimitive.GroupHeading
 	class={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)}
 	{...rest}
 >
 	{@render children?.()}
-</SelectPrimitive.Label>
+</SelectPrimitive.GroupHeading>

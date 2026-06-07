@@ -395,8 +395,9 @@
 								One-time codes can only be sent to existing accounts.
 							</p>
 							<div class="grid gap-2">
-								<label class="text-sm font-medium leading-none">Email Address</label>
+								<label for="otp-email-input" class="text-sm font-medium leading-none">Email Address</label>
 								<Input
+									id="otp-email-input"
 									type="email"
 									placeholder="you@example.com"
 									bind:value={otpEmail}
@@ -420,8 +421,9 @@
 							</div>
 
 							<div class="grid gap-2">
-								<label class="text-sm font-medium leading-none">Enter OTP</label>
+								<label for="otp-input" class="text-sm font-medium leading-none">Enter OTP</label>
 								<Input
+									id="otp-input"
 									placeholder="000000"
 									maxlength={6}
 									bind:value={otpCode}

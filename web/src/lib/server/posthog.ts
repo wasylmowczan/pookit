@@ -1,15 +1,13 @@
 import { PostHog } from 'posthog-node';
 import { config } from '$lib/config-server';
 
-let posthogClient: PostHog | null = null;
+const posthogClient = new PostHog(config.posthogApiKey || 'no-key', {
+	host: config.posthogApiHost || 'https://eu.i.posthog.com',
+	flushAt: 1,
+	flushInterval: 0,
+	disabled: !config.posthogApiKey
+});
 
-export function getPostHogClient() {
-	if (!posthogClient) {
-		posthogClient = new PostHog(config.posthogApiKey, {
-			host: config.posthogApiHost,
-			flushAt: 1,
-			flushInterval: 0
-		});
-	}
+export function getPostHogClient(): PostHog {
 	return posthogClient;
 }

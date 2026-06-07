@@ -60,7 +60,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 				await event.locals.pb.collection('users').authRefresh();
 			}
 
-			event.locals.user = event.locals.pb.authStore.model as User;
+			event.locals.user = event.locals.pb.authStore.record as User;
 		} catch (error) {
 			event.locals.pb.authStore.clear();
 			event.locals.user = null;

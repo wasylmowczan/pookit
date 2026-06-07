@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Checkbox as CheckboxPrimitive, type WithoutChildrenOrChild } from "bits-ui";
-	import Check from "/svelte/check";
-	import Minus from "/svelte/minus";
+	import Check from "@lucide/svelte/icons/check";
+	import Minus from "@lucide/svelte/icons/minus";
 	import { cn } from "$lib/utils.js";
 
 	let {

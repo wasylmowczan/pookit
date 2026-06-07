@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { WithElementRef } from "bits-ui";
 	import type { HTMLAttributes } from "svelte/elements";
 	import { cn } from "$lib/utils";
 
@@ -8,7 +9,7 @@
 		children,
 		size = "default",
 		...restProps
-	}: HTMLAttributes<HTMLDivElement> & { size?: "default" | "sm" } = $props();
+	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & { size?: "default" | "sm" } = $props();
 </script>
 
 <div
