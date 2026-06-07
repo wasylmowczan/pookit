@@ -2,13 +2,7 @@ import { Webhooks } from '@polar-sh/sveltekit';
 import type { RequestHandler } from './$types';
 import { config } from '$lib/config-server';
 import { getSuperuserClient } from '$lib/server/pocketbase-superuser';
-
-// Polar webhook handler. Verifies the Standard Webhooks signature via the
-// adapter, then upserts subscriptions/orders into PocketBase and caches the
-// polar_customer_id on the user record so the portal route can find them.
-//
-// NOTE: Webhook payloads from Polar use snake_case keys at the API level, but
-// the SDK normalises them to camelCase for TS callers.
+import { ClientResponseError } from 'pocketbase';
 
 type WithExternalId = { externalId?: string | null; external_id?: string | null };
 
@@ -20,7 +14,6 @@ async function findUserId(
 	const externalId = customer.externalId ?? customer.external_id ?? null;
 	if (externalId) return externalId;
 
-	// Fallback: look up by polar_customer_id we may have cached previously.
 	if (customer.id) {
 		try {
 			const record = await pb
@@ -35,16 +28,28 @@ async function findUserId(
 	return null;
 }
 
+// Upsert by polar_id: tries to find and update, falls back to create only on 404.
 async function upsertByPolarId(
 	pb: Awaited<ReturnType<typeof getSuperuserClient>>,
 	collection: 'subscriptions' | 'orders',
 	polarId: string,
 	data: Record<string, unknown>
 ) {
+	let existingId: string | null = null;
 	try {
 		const existing = await pb.collection(collection).getFirstListItem(`polar_id = "${polarId}"`);
-		await pb.collection(collection).update(existing.id, data);
-	} catch {
+		existingId = existing.id;
+	} catch (err) {
+		if (err instanceof ClientResponseError && err.status === 404) {
+			existingId = null;
+		} else {
+			throw err;
+		}
+	}
+
+	if (existingId) {
+		await pb.collection(collection).update(existingId, data);
+	} else {
 		await pb.collection(collection).create({ polar_id: polarId, ...data });
 	}
 }
@@ -71,9 +76,6 @@ function toIsoDate(value: unknown): string | undefined {
 	return undefined;
 }
 
-// Set of event types we actually handle. For everything else we ack with 200
-// (after signature verification) so Polar doesn't retry for events we don't care
-// about, and so SDK-side schema mismatches on unhandled types can't break us.
 const HANDLED_EVENT_TYPES = new Set([
 	'subscription.created',
 	'subscription.updated',
@@ -94,16 +96,13 @@ export const POST: RequestHandler = async (event) => {
 		});
 	}
 
-	// Peek at the event type so we can decide how to react if the SDK throws
-	// while parsing/verifying. Reading the body twice is fine — the adapter
-	// re-reads via event.request.text() and we clone here.
 	let eventType: string | undefined;
 	try {
 		const cloned = event.request.clone();
 		const json = (await cloned.json()) as { type?: string };
 		eventType = json?.type;
 	} catch {
-		// Body wasn't JSON or already consumed — let the adapter handle it.
+		// ignored
 	}
 
 	// Build the handler inside the request so $env/dynamic/private is resolved
@@ -113,6 +112,7 @@ export const POST: RequestHandler = async (event) => {
 
 		onSubscriptionCreated: async (payload) => {
 			const sub = payload.data;
+			console.log('[polar] onSubscriptionCreated', sub.id);
 			const pb = await getSuperuserClient();
 			const userId = await findUserId(pb, sub.customer);
 			if (userId && sub.customer?.id) await cachePolarCustomerOnUser(pb, userId, sub.customer.id);
@@ -134,6 +134,7 @@ export const POST: RequestHandler = async (event) => {
 
 		onSubscriptionUpdated: async (payload) => {
 			const sub = payload.data;
+			console.log('[polar] onSubscriptionUpdated', sub.id);
 			const pb = await getSuperuserClient();
 			const userId = await findUserId(pb, sub.customer);
 			if (userId && sub.customer?.id) await cachePolarCustomerOnUser(pb, userId, sub.customer.id);
@@ -155,6 +156,7 @@ export const POST: RequestHandler = async (event) => {
 
 		onSubscriptionCanceled: async (payload) => {
 			const sub = payload.data;
+			console.log('[polar] onSubscriptionCanceled', sub.id);
 			const pb = await getSuperuserClient();
 			await upsertByPolarId(pb, 'subscriptions', sub.id, {
 				status: sub.status,
@@ -164,14 +166,18 @@ export const POST: RequestHandler = async (event) => {
 
 		onSubscriptionRevoked: async (payload) => {
 			const sub = payload.data;
+			console.log('[polar] onSubscriptionRevoked', sub.id);
 			const pb = await getSuperuserClient();
 			await upsertByPolarId(pb, 'subscriptions', sub.id, { status: sub.status });
 		},
 
 		onOrderPaid: async (payload) => {
 			const order = payload.data;
+			console.log('[polar] onOrderPaid', order.id, 'customer.externalId:', order.customer?.externalId);
 			const pb = await getSuperuserClient();
+			console.log('[polar] getSuperuserClient ok');
 			const userId = await findUserId(pb, order.customer);
+			console.log('[polar] userId:', userId);
 			if (userId && order.customer?.id) await cachePolarCustomerOnUser(pb, userId, order.customer.id);
 
 			await upsertByPolarId(pb, 'orders', order.id, {
@@ -185,10 +191,12 @@ export const POST: RequestHandler = async (event) => {
 				currency: order.currency ?? '',
 				billing_reason: order.billingReason ?? ''
 			});
+			console.log('[polar] onOrderPaid done', order.id);
 		},
 
 		onOrderRefunded: async (payload) => {
 			const order = payload.data;
+			console.log('[polar] onOrderRefunded', order.id);
 			const pb = await getSuperuserClient();
 			await upsertByPolarId(pb, 'orders', order.id, {
 				status:
@@ -200,6 +208,7 @@ export const POST: RequestHandler = async (event) => {
 
 		onCustomerCreated: async (payload) => {
 			const customer = payload.data;
+			console.log('[polar] onCustomerCreated', customer.id, 'externalId:', customer.externalId);
 			const externalId = customer.externalId;
 			if (!externalId) return;
 			const pb = await getSuperuserClient();
@@ -208,6 +217,7 @@ export const POST: RequestHandler = async (event) => {
 
 		onCustomerUpdated: async (payload) => {
 			const customer = payload.data;
+			console.log('[polar] onCustomerUpdated', customer.id, 'externalId:', customer.externalId);
 			const externalId = customer.externalId;
 			if (!externalId) return;
 			const pb = await getSuperuserClient();
@@ -218,12 +228,9 @@ export const POST: RequestHandler = async (event) => {
 	try {
 		return await polarWebhooks(event);
 	} catch (err) {
-		// SDK validation errors on event types we don't handle: just ack so Polar
-		// stops retrying. Real handler errors (which we DO want retried) will only
-		// happen for events in HANDLED_EVENT_TYPES, so we surface those as 500.
 		if (eventType && !HANDLED_EVENT_TYPES.has(eventType)) {
 			console.warn(
-				`[polar] Ignored unhandled event "${eventType}" (SDK parse/verify error):`,
+				`[polar] Ignored unhandled event "${eventType}":`,
 				err instanceof Error ? err.message : err
 			);
 			return new Response(JSON.stringify({ received: true, ignored: eventType }), {
@@ -231,7 +238,12 @@ export const POST: RequestHandler = async (event) => {
 				headers: { 'content-type': 'application/json' }
 			});
 		}
-		console.error('[polar] Webhook handler error:', err);
+		console.error('[polar] Webhook handler error for event:', eventType);
+		console.error('[polar] Error type:', err?.constructor?.name);
+		console.error('[polar] Error:', err instanceof Error ? err.message : err);
+		if (err instanceof ClientResponseError) {
+			console.error('[polar] PocketBase status:', err.status, 'response:', JSON.stringify(err.response));
+		}
 		throw err;
 	}
 };
