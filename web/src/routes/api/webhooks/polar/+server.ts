@@ -31,13 +31,23 @@ async function findUserId(
 ): Promise<string | null> {
 	if (!customer) return null;
 	const externalId = customer.externalId ?? customer.external_id ?? null;
-	if (externalId) return externalId;
+
+	if (externalId) {
+		// Verify the user actually exists before using it as a PB relation.
+		// The externalId might come from a different environment (e.g. local dev).
+		try {
+			await pb.collection('users').getOne(externalId, { fields: 'id' });
+			return externalId;
+		} catch {
+			// User doesn't exist — fall through to polar_customer_id lookup
+		}
+	}
 
 	if (customer.id) {
 		try {
 			const record = await pb
 				.collection('users')
-				.getFirstListItem(`polar_customer_id = "${customer.id}"`);
+				.getFirstListItem(`polar_customer_id = "${customer.id}"`, { fields: 'id' });
 			return record.id;
 		} catch {
 			return null;
