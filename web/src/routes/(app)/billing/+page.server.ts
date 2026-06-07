@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { getPolarClient } from '$lib/server/polar';
+import { getPolarClient, buildPriceLabel } from '$lib/server/polar';
 import { config } from '$lib/config-server';
 
 export type DisplayProduct = {
@@ -14,27 +14,6 @@ export type DisplayProduct = {
 	isCustom: boolean;
 };
 
-function buildPriceLabel(
-	amount: number | null,
-	currency: string | null,
-	interval: string | null,
-	isFree: boolean,
-	isCustom: boolean
-): string {
-	if (isFree) return 'Free';
-	if (isCustom) return 'Pay what you want';
-	if (amount == null) return '—';
-	const cur = (currency ?? 'USD').toUpperCase();
-	let priceText: string;
-	try {
-		priceText = new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(
-			amount / 100
-		);
-	} catch {
-		priceText = `${(amount / 100).toFixed(2)} ${cur}`;
-	}
-	return interval ? `${priceText} / ${interval}` : priceText;
-}
 
 async function fetchPolarProducts(): Promise<DisplayProduct[]> {
 	if (!config.polarAccessToken) return [];

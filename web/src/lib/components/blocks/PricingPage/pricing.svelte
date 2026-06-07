@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { Badge } from '$lib/components/ui/badge';
 	import Check from '@lucide/svelte/icons/check';
 
 	type ProPlan = {
@@ -20,8 +21,6 @@
 		proCtaLabel?: string;
 	}>();
 
-	const singlePlan = $derived(proPlans.length === 1 ? proPlans[0] : null);
-	const multiPlans = $derived(proPlans.length > 1 ? proPlans : null);
 </script>
 
 <section class="py-16 md:py-32">
@@ -34,7 +33,7 @@
 			</p>
 		</div>
 
-		{#if multiPlans}
+		{#if proPlans.length > 1}
 			<!-- Multi-plan: Free + multiple paid cards -->
 			<div class="mt-8 grid gap-6 md:mt-20 md:grid-cols-3">
 				<!-- Free -->
@@ -62,8 +61,8 @@
 				</div>
 
 				<!-- Paid plans -->
-				{#each multiPlans as plan, i}
-					{@const isHighlighted = i === multiPlans.length - 1}
+				{#each proPlans as plan, i}
+					{@const isHighlighted = i === proPlans.length - 1}
 					{@const checkoutHref = `/api/checkout?product=${encodeURIComponent(plan.id)}`}
 					<div
 						class={[
@@ -85,15 +84,7 @@
 							<div>
 								<div class="flex items-center gap-2">
 									<h2 class="font-medium">{plan.name}</h2>
-									{#if plan.recurringInterval}
-										<span class="text-xs text-muted-foreground rounded-full border px-2 py-0.5">
-											{plan.recurringInterval}
-										</span>
-									{:else}
-										<span class="text-xs text-muted-foreground rounded-full border px-2 py-0.5">
-											one-time
-										</span>
-									{/if}
+									<Badge variant="outline">{plan.recurringInterval ?? 'one-time'}</Badge>
 								</div>
 								<span class="my-3 block text-2xl font-semibold">{plan.priceLabel}</span>
 								<p class="text-sm text-muted-foreground">
@@ -153,15 +144,15 @@
 					<div class="grid gap-6 sm:grid-cols-2">
 						<div class="space-y-4">
 							<div>
-								<h2 class="font-medium">{singlePlan?.name ?? 'Pro'}</h2>
-								<span class="my-3 block text-2xl font-semibold">{singlePlan?.priceLabel ?? '$99'}</span>
+								<h2 class="font-medium">{proPlans[0]?.name ?? 'Pro'}</h2>
+								<span class="my-3 block text-2xl font-semibold">{proPlans[0]?.priceLabel ?? '$99'}</span>
 								<p class="text-sm text-muted-foreground">
-									{singlePlan?.description ?? 'Perfect for Indie Hackers.'}
+									{proPlans[0]?.description ?? 'Perfect for Indie Hackers.'}
 								</p>
 							</div>
 
 							<Button
-								href={singlePlan ? `/api/checkout?product=${encodeURIComponent(singlePlan.id)}` : '/register'}
+								href={proPlans[0] ? `/api/checkout?product=${encodeURIComponent(proPlans[0].id)}` : '/register'}
 								class="w-full"
 							>
 								{proCtaLabel}

@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { config } from '$lib/config-server';
-import { getPolarClient } from '$lib/server/polar';
+import { getPolarClient, buildPriceLabel } from '$lib/server/polar';
 
 export type ProPlan = {
 	id: string;
@@ -9,24 +9,6 @@ export type ProPlan = {
 	description: string | null;
 	recurringInterval: string | null;
 };
-
-function buildPriceLabel(
-	amount: number | null,
-	currency: string | null,
-	interval: string | null
-): string {
-	if (amount == null) return '—';
-	const cur = (currency ?? 'USD').toUpperCase();
-	let priceText: string;
-	try {
-		priceText = new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(
-			amount / 100
-		);
-	} catch {
-		priceText = `${(amount / 100).toFixed(2)} ${cur}`;
-	}
-	return interval ? `${priceText} / ${interval}` : priceText;
-}
 
 async function fetchAllProPlans(): Promise<ProPlan[]> {
 	if (!config.polarAccessToken) return [];
@@ -48,9 +30,13 @@ async function fetchAllProPlans(): Promise<ProPlan[]> {
 				const priceCurrency =
 					(firstPrice as { priceCurrency?: string } | undefined)?.priceCurrency ?? null;
 
-				let priceLabel: string;
-				if (amountType === 'custom') priceLabel = 'Pay what you want';
-				else priceLabel = buildPriceLabel(priceAmount, priceCurrency, p.recurringInterval ?? null);
+				const priceLabel = buildPriceLabel(
+					priceAmount,
+					priceCurrency,
+					p.recurringInterval ?? null,
+					false,
+					amountType === 'custom'
+				);
 
 				plans.push({
 					id: p.id,

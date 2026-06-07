@@ -11,14 +11,8 @@
 	const sub = $derived(data.activeSubscription as Record<string, unknown> | undefined);
 	const order = $derived(data.latestPaidOrder as Record<string, unknown> | null);
 	const purchasedIds = $derived(new Set(data.purchasedProductIds));
-
-	// For display: subscription takes priority over one-time order.
 	const activePlan = $derived(sub ?? order ?? null);
-	const isSubscription = $derived(!!sub);
-
-	const activeProductId = $derived(
-		sub ? String(sub.product_id ?? '') : order ? String(order.product_id ?? '') : null
-	);
+	const activeProductId = $derived(activePlan ? String(activePlan.product_id ?? '') : null);
 
 	function formatAmount(amount: unknown, currency: unknown): string {
 		const n = typeof amount === 'number' ? amount : Number(amount ?? 0);
@@ -77,7 +71,7 @@
 						<div class="space-y-3">
 							<div class="flex items-center gap-2">
 								<span class="font-semibold">{activePlan.product_name || 'Pro'}</span>
-								{#if isSubscription}
+								{#if sub}
 									<Badge variant="default">{String(sub!.status)}</Badge>
 									{#if sub!.cancel_at_period_end}
 										<Badge variant="outline">Cancels at period end</Badge>
@@ -87,7 +81,7 @@
 								{/if}
 							</div>
 
-							{#if isSubscription}
+							{#if sub}
 								<dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm">
 									<dt class="text-muted-foreground">Price</dt>
 									<dd class="font-medium">
