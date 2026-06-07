@@ -7,6 +7,7 @@ export type ProPlan = {
 	name: string;
 	priceLabel: string;
 	description: string | null;
+	recurringInterval: string | null;
 };
 
 function buildPriceLabel(
@@ -27,41 +28,56 @@ function buildPriceLabel(
 	return interval ? `${priceText} / ${interval}` : priceText;
 }
 
-async function fetchProPlan(id: string | null): Promise<ProPlan | null> {
-	if (!id || !config.polarAccessToken) return null;
+async function fetchAllProPlans(): Promise<ProPlan[]> {
+	if (!config.polarAccessToken) return [];
 	try {
 		const polar = getPolarClient();
-		const product = await polar.products.get({ id });
-		const firstPrice = product.prices?.[0];
-		const amountType = (firstPrice as { amountType?: string } | undefined)?.amountType;
-		const priceAmount =
-			amountType === 'fixed'
-				? ((firstPrice as { priceAmount?: number }).priceAmount ?? null)
-				: null;
-		const priceCurrency =
-			(firstPrice as { priceCurrency?: string } | undefined)?.priceCurrency ?? null;
+		const result = await polar.products.list({ isArchived: false });
 
-		let priceLabel: string;
-		if (amountType === 'free') priceLabel = 'Free';
-		else if (amountType === 'custom') priceLabel = 'Pay what you want';
-		else
-			priceLabel = buildPriceLabel(priceAmount, priceCurrency, product.recurringInterval ?? null);
+		const plans: ProPlan[] = [];
+		for await (const page of result) {
+			for (const p of page.result.items) {
+				const firstPrice = p.prices?.[0];
+				const amountType = (firstPrice as { amountType?: string } | undefined)?.amountType;
+				if (amountType === 'free') continue; // skip free products — we show the free tier manually
 
-		return {
-			id: product.id,
-			name: product.name,
-			priceLabel,
-			description: product.description ?? null
-		};
+				const priceAmount =
+					amountType === 'fixed'
+						? ((firstPrice as { priceAmount?: number }).priceAmount ?? null)
+						: null;
+				const priceCurrency =
+					(firstPrice as { priceCurrency?: string } | undefined)?.priceCurrency ?? null;
+
+				let priceLabel: string;
+				if (amountType === 'custom') priceLabel = 'Pay what you want';
+				else priceLabel = buildPriceLabel(priceAmount, priceCurrency, p.recurringInterval ?? null);
+
+				plans.push({
+					id: p.id,
+					name: p.name,
+					priceLabel,
+					description: p.description ?? null,
+					recurringInterval: p.recurringInterval ?? null
+				});
+			}
+		}
+
+		// Sort: subscriptions first (ascending price), then one-time purchases (ascending price)
+		plans.sort((a, b) => {
+			const aIsRecurring = !!a.recurringInterval;
+			const bIsRecurring = !!b.recurringInterval;
+			if (aIsRecurring !== bIsRecurring) return aIsRecurring ? -1 : 1;
+			return a.priceLabel.localeCompare(b.priceLabel);
+		});
+
+		return plans;
 	} catch (err) {
-		console.error('[polar] Failed to load Pro product:', err);
-		return null;
+		console.error('[polar] Failed to load products for pricing page:', err);
+		return [];
 	}
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
-	// First product in POLAR_PRO_PRODUCT_IDS is used as the Pro plan CTA target.
-	const proProductId = config.polarProProductIds[0] ?? null;
-	const proPlan = await fetchProPlan(proProductId);
-	return { user: locals.user, proProductId, proPlan };
+	const proPlans = await fetchAllProPlans();
+	return { user: locals.user, proPlans };
 };

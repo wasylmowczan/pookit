@@ -9,7 +9,16 @@
 	let { data } = $props();
 
 	const sub = $derived(data.activeSubscription as Record<string, unknown> | undefined);
-	const activeProductId = $derived(sub ? String(sub.product_id ?? '') : null);
+	const order = $derived(data.latestPaidOrder as Record<string, unknown> | null);
+	const purchasedIds = $derived(new Set(data.purchasedProductIds));
+
+	// For display: subscription takes priority over one-time order.
+	const activePlan = $derived(sub ?? order ?? null);
+	const isSubscription = $derived(!!sub);
+
+	const activeProductId = $derived(
+		sub ? String(sub.product_id ?? '') : order ? String(order.product_id ?? '') : null
+	);
 
 	function formatAmount(amount: unknown, currency: unknown): string {
 		const n = typeof amount === 'number' ? amount : Number(amount ?? 0);
@@ -63,22 +72,28 @@
 		<h2 class="text-base font-semibold">Current plan</h2>
 		<Card>
 			<CardContent class="py-4">
-				{#if sub}
+				{#if activePlan}
 					<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 						<div class="space-y-1">
 							<div class="flex items-center gap-2">
-								<span class="font-semibold">{sub.product_name || 'Pro'}</span>
-								<Badge variant="default">{String(sub.status)}</Badge>
-								{#if sub.cancel_at_period_end}
-									<Badge variant="outline">Cancels at period end</Badge>
+								<span class="font-semibold">{activePlan.product_name || 'Pro'}</span>
+								{#if isSubscription}
+									<Badge variant="default">{String(sub!.status)}</Badge>
+									{#if sub!.cancel_at_period_end}
+										<Badge variant="outline">Cancels at period end</Badge>
+									{/if}
+								{:else}
+									<Badge variant="default">Purchased</Badge>
 								{/if}
 							</div>
 							<p class="text-sm text-muted-foreground">
-								{formatAmount(sub.amount, sub.currency)} / {String(
-									sub.recurring_interval ?? 'month'
-								)}
-								{#if sub.current_period_end}
-									· Renews on {formatDate(sub.current_period_end)}
+								{#if isSubscription}
+									{formatAmount(sub!.amount, sub!.currency)} / {String(sub!.recurring_interval ?? 'month')}
+									{#if sub!.current_period_end}
+										· Renews on {formatDate(sub!.current_period_end)}
+									{/if}
+								{:else}
+									{formatAmount(order!.amount, order!.currency)} · One-time purchase
 								{/if}
 							</p>
 						</div>
@@ -122,7 +137,7 @@
 		{:else if isSingle}
 			<!-- Hero card for a single product -->
 			{@const product = data.products[0]}
-			{@const isCurrent = activeProductId === product.id}
+			{@const isCurrent = activeProductId === product.id || purchasedIds.has(product.id)}
 			{@const features = descriptionToFeatures(product.description)}
 			{@const checkoutHref = `/api/checkout?product=${encodeURIComponent(product.id)}`}
 
@@ -182,7 +197,7 @@
 
 						{#if isCurrent}
 							<Button class="w-full" size="lg" disabled>You're on this plan</Button>
-						{:else if sub}
+						{:else if sub && product.recurringInterval}
 							<Button class="w-full" size="lg" href="/api/portal" variant="outline">
 								Switch plan
 							</Button>
@@ -214,7 +229,7 @@
 				class:lg:grid-cols-3={productCount >= 3}
 			>
 				{#each data.products as product, i (product.id)}
-					{@const isCurrent = activeProductId === product.id}
+					{@const isCurrent = activeProductId === product.id || purchasedIds.has(product.id)}
 					{@const features = descriptionToFeatures(product.description)}
 					{@const checkoutHref = `/api/checkout?product=${encodeURIComponent(product.id)}`}
 					{@const isHighlighted = !isCurrent && productCount >= 2 && i === productCount - 1}
@@ -267,7 +282,7 @@
 
 							{#if isCurrent}
 								<Button class="w-full" disabled>Current plan</Button>
-							{:else if sub}
+							{:else if sub && product.recurringInterval}
 								<Button class="w-full" href="/api/portal" variant="outline">Switch plan</Button>
 							{:else if product.isCustom}
 								<Button class="w-full" href={checkoutHref}>Choose amount</Button>
@@ -279,7 +294,7 @@
 									href={checkoutHref}
 									variant={isHighlighted ? 'default' : 'outline'}
 								>
-									Subscribe
+									{product.recurringInterval ? 'Subscribe' : 'Get ' + product.name}
 								</Button>
 							{/if}
 						</CardContent>

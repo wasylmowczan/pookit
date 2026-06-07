@@ -20,6 +20,5 @@
 
 <PricingPage
 	pricingList={defaultPricingList}
-	proProductId={data.proProductId ?? undefined}
-	proPlan={data.proPlan ?? undefined}
+	proPlans={data.proPlans}
 />

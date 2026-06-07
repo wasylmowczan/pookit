@@ -114,10 +114,21 @@ export const load: PageServerLoad = async ({ locals }) => {
 		(s) => s.status === 'active' || s.status === 'trialing'
 	);
 
+	// For one-time products there's no subscription — treat the most recent
+	// paid order as the active "plan" when no subscription exists.
+	// Only consider orders that are NOT subscription renewals (subscription_id is empty).
+	const oneTimeOrders = orders.filter((o) => o.status === 'paid' && !o.subscription_id);
+	const latestPaidOrder = oneTimeOrders[0] ?? null;
+
+	// Set of product IDs the user has already paid for (one-time purchases only).
+	const purchasedProductIds = new Set(oneTimeOrders.map((o) => String(o.product_id)));
+
 	return {
 		subscriptions,
 		orders,
 		activeSubscription,
+		latestPaidOrder,
+		purchasedProductIds: [...purchasedProductIds],
 		products
 	};
 };
