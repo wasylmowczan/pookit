@@ -85,113 +85,6 @@ const HANDLED_EVENT_TYPES = new Set([
 	'customer.updated'
 ]);
 
-const polarWebhooks = Webhooks({
-	webhookSecret: config.polarWebhookSecret ?? '',
-
-	onSubscriptionCreated: async (payload) => {
-		const sub = payload.data;
-		const pb = await getSuperuserClient();
-		const userId = await findUserId(pb, sub.customer);
-		if (userId && sub.customer?.id) await cachePolarCustomerOnUser(pb, userId, sub.customer.id);
-
-		await upsertByPolarId(pb, 'subscriptions', sub.id, {
-			user: userId,
-			polar_customer_id: sub.customer?.id ?? '',
-			product_id: sub.productId,
-			product_name: sub.product?.name ?? '',
-			status: sub.status,
-			current_period_start: toIsoDate(sub.currentPeriodStart),
-			current_period_end: toIsoDate(sub.currentPeriodEnd),
-			cancel_at_period_end: Boolean(sub.cancelAtPeriodEnd),
-			amount: sub.amount ?? 0,
-			currency: sub.currency ?? '',
-			recurring_interval: sub.recurringInterval ?? ''
-		});
-	},
-
-	onSubscriptionUpdated: async (payload) => {
-		const sub = payload.data;
-		const pb = await getSuperuserClient();
-		const userId = await findUserId(pb, sub.customer);
-		if (userId && sub.customer?.id) await cachePolarCustomerOnUser(pb, userId, sub.customer.id);
-
-		await upsertByPolarId(pb, 'subscriptions', sub.id, {
-			user: userId,
-			polar_customer_id: sub.customer?.id ?? '',
-			product_id: sub.productId,
-			product_name: sub.product?.name ?? '',
-			status: sub.status,
-			current_period_start: toIsoDate(sub.currentPeriodStart),
-			current_period_end: toIsoDate(sub.currentPeriodEnd),
-			cancel_at_period_end: Boolean(sub.cancelAtPeriodEnd),
-			amount: sub.amount ?? 0,
-			currency: sub.currency ?? '',
-			recurring_interval: sub.recurringInterval ?? ''
-		});
-	},
-
-	onSubscriptionCanceled: async (payload) => {
-		const sub = payload.data;
-		const pb = await getSuperuserClient();
-		await upsertByPolarId(pb, 'subscriptions', sub.id, {
-			status: sub.status,
-			cancel_at_period_end: Boolean(sub.cancelAtPeriodEnd)
-		});
-	},
-
-	onSubscriptionRevoked: async (payload) => {
-		const sub = payload.data;
-		const pb = await getSuperuserClient();
-		await upsertByPolarId(pb, 'subscriptions', sub.id, { status: sub.status });
-	},
-
-	onOrderPaid: async (payload) => {
-		const order = payload.data;
-		const pb = await getSuperuserClient();
-		const userId = await findUserId(pb, order.customer);
-		if (userId && order.customer?.id) await cachePolarCustomerOnUser(pb, userId, order.customer.id);
-
-		await upsertByPolarId(pb, 'orders', order.id, {
-			user: userId,
-			polar_customer_id: order.customer?.id ?? '',
-			subscription_id: order.subscriptionId ?? '',
-			product_id: order.productId,
-			product_name: order.product?.name ?? '',
-			status: 'paid',
-			amount: order.totalAmount ?? 0,
-			currency: order.currency ?? '',
-			billing_reason: order.billingReason ?? ''
-		});
-	},
-
-	onOrderRefunded: async (payload) => {
-		const order = payload.data;
-		const pb = await getSuperuserClient();
-		await upsertByPolarId(pb, 'orders', order.id, {
-			status:
-				order.refundedAmount && order.totalAmount && order.refundedAmount < order.totalAmount
-					? 'partially_refunded'
-					: 'refunded'
-		});
-	},
-
-	onCustomerCreated: async (payload) => {
-		const customer = payload.data;
-		const externalId = customer.externalId;
-		if (!externalId) return;
-		const pb = await getSuperuserClient();
-		await cachePolarCustomerOnUser(pb, externalId, customer.id);
-	},
-
-	onCustomerUpdated: async (payload) => {
-		const customer = payload.data;
-		const externalId = customer.externalId;
-		if (!externalId) return;
-		const pb = await getSuperuserClient();
-		await cachePolarCustomerOnUser(pb, externalId, customer.id);
-	}
-});
-
 export const POST: RequestHandler = async (event) => {
 	if (!config.polarWebhookSecret) {
 		console.error('[polar] POLAR_WEBHOOK_SECRET is not configured');
@@ -212,6 +105,115 @@ export const POST: RequestHandler = async (event) => {
 	} catch {
 		// Body wasn't JSON or already consumed — let the adapter handle it.
 	}
+
+	// Build the handler inside the request so $env/dynamic/private is resolved
+	// from the Cloudflare Workers request context, not at module init time.
+	const polarWebhooks = Webhooks({
+		webhookSecret: config.polarWebhookSecret,
+
+		onSubscriptionCreated: async (payload) => {
+			const sub = payload.data;
+			const pb = await getSuperuserClient();
+			const userId = await findUserId(pb, sub.customer);
+			if (userId && sub.customer?.id) await cachePolarCustomerOnUser(pb, userId, sub.customer.id);
+
+			await upsertByPolarId(pb, 'subscriptions', sub.id, {
+				user: userId,
+				polar_customer_id: sub.customer?.id ?? '',
+				product_id: sub.productId,
+				product_name: sub.product?.name ?? '',
+				status: sub.status,
+				current_period_start: toIsoDate(sub.currentPeriodStart),
+				current_period_end: toIsoDate(sub.currentPeriodEnd),
+				cancel_at_period_end: Boolean(sub.cancelAtPeriodEnd),
+				amount: sub.amount ?? 0,
+				currency: sub.currency ?? '',
+				recurring_interval: sub.recurringInterval ?? ''
+			});
+		},
+
+		onSubscriptionUpdated: async (payload) => {
+			const sub = payload.data;
+			const pb = await getSuperuserClient();
+			const userId = await findUserId(pb, sub.customer);
+			if (userId && sub.customer?.id) await cachePolarCustomerOnUser(pb, userId, sub.customer.id);
+
+			await upsertByPolarId(pb, 'subscriptions', sub.id, {
+				user: userId,
+				polar_customer_id: sub.customer?.id ?? '',
+				product_id: sub.productId,
+				product_name: sub.product?.name ?? '',
+				status: sub.status,
+				current_period_start: toIsoDate(sub.currentPeriodStart),
+				current_period_end: toIsoDate(sub.currentPeriodEnd),
+				cancel_at_period_end: Boolean(sub.cancelAtPeriodEnd),
+				amount: sub.amount ?? 0,
+				currency: sub.currency ?? '',
+				recurring_interval: sub.recurringInterval ?? ''
+			});
+		},
+
+		onSubscriptionCanceled: async (payload) => {
+			const sub = payload.data;
+			const pb = await getSuperuserClient();
+			await upsertByPolarId(pb, 'subscriptions', sub.id, {
+				status: sub.status,
+				cancel_at_period_end: Boolean(sub.cancelAtPeriodEnd)
+			});
+		},
+
+		onSubscriptionRevoked: async (payload) => {
+			const sub = payload.data;
+			const pb = await getSuperuserClient();
+			await upsertByPolarId(pb, 'subscriptions', sub.id, { status: sub.status });
+		},
+
+		onOrderPaid: async (payload) => {
+			const order = payload.data;
+			const pb = await getSuperuserClient();
+			const userId = await findUserId(pb, order.customer);
+			if (userId && order.customer?.id) await cachePolarCustomerOnUser(pb, userId, order.customer.id);
+
+			await upsertByPolarId(pb, 'orders', order.id, {
+				user: userId,
+				polar_customer_id: order.customer?.id ?? '',
+				subscription_id: order.subscriptionId ?? '',
+				product_id: order.productId,
+				product_name: order.product?.name ?? '',
+				status: 'paid',
+				amount: order.totalAmount ?? 0,
+				currency: order.currency ?? '',
+				billing_reason: order.billingReason ?? ''
+			});
+		},
+
+		onOrderRefunded: async (payload) => {
+			const order = payload.data;
+			const pb = await getSuperuserClient();
+			await upsertByPolarId(pb, 'orders', order.id, {
+				status:
+					order.refundedAmount && order.totalAmount && order.refundedAmount < order.totalAmount
+						? 'partially_refunded'
+						: 'refunded'
+			});
+		},
+
+		onCustomerCreated: async (payload) => {
+			const customer = payload.data;
+			const externalId = customer.externalId;
+			if (!externalId) return;
+			const pb = await getSuperuserClient();
+			await cachePolarCustomerOnUser(pb, externalId, customer.id);
+		},
+
+		onCustomerUpdated: async (payload) => {
+			const customer = payload.data;
+			const externalId = customer.externalId;
+			if (!externalId) return;
+			const pb = await getSuperuserClient();
+			await cachePolarCustomerOnUser(pb, externalId, customer.id);
+		}
+	});
 
 	try {
 		return await polarWebhooks(event);
