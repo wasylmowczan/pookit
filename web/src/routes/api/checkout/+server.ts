@@ -30,6 +30,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		const checkout = await polar.checkouts.create({
 			products: [productId],
 			successUrl: `${url.origin}/billing?checkout_id={CHECKOUT_ID}`,
+			returnUrl: `${url.origin}/billing`,
 			externalCustomerId: locals.user.id,
 			customerEmail: locals.user.email,
 			customerName: locals.user.name || locals.user.username || undefined
