@@ -64,7 +64,7 @@
 	<!-- Current plan summary -->
 	<section class="space-y-3">
 		<h2 class="text-base font-semibold">Current plan</h2>
-		<Card>
+		<Card class="shadow-sm">
 			<CardContent class="py-4">
 				{#if activePlan}
 					<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -139,7 +139,7 @@
 		</div>
 
 		{#if productCount === 0}
-			<Card>
+			<Card class="shadow-sm">
 				<CardContent class="py-6 text-sm text-muted-foreground">
 					No products found. Create products in your <a
 						href="https://polar.sh"
@@ -158,7 +158,7 @@
 			{@const checkoutHref = `/api/checkout?product=${encodeURIComponent(product.id)}`}
 
 			<div class="w-full max-w-2xl">
-				<Card class="relative overflow-hidden">
+				<Card class="relative overflow-hidden shadow-sm">
 					<!-- Decorative gradient blob -->
 					<div
 						class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
@@ -250,7 +250,7 @@
 					{@const checkoutHref = `/api/checkout?product=${encodeURIComponent(product.id)}`}
 					{@const isHighlighted = !isCurrent && productCount >= 2 && i === productCount - 1}
 
-					<Card class={isHighlighted ? 'border-primary shadow-lg relative overflow-visible' : 'relative'}>
+					<Card class={isHighlighted ? 'border-primary shadow-lg relative overflow-visible' : 'relative shadow-sm'}>
 						{#if isHighlighted}
 							<div class="absolute -top-3 left-1/2 -translate-x-1/2">
 								<Badge variant="default" class="px-3 py-0.5 text-xs shadow-sm">Most popular</Badge>
@@ -321,7 +321,7 @@
 	{#if data.orders.length > 0}
 		<section class="space-y-3">
 			<h2 class="text-base font-semibold">Order history</h2>
-			<Card>
+			<Card class="shadow-sm">
 				<CardContent class="py-0">
 					<ul class="divide-y">
 						{#each data.orders as order (order.id)}

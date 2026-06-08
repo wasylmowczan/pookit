@@ -41,7 +41,7 @@
 	const { form: formData, enhance } = form;
 </script>
 
-<Card>
+<Card class="shadow-sm">
 	<form action="?/updateName" method="POST" use:enhance>
 		<CardHeader>
 			<CardTitle>Change Name</CardTitle>

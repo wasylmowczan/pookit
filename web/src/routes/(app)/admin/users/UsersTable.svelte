@@ -46,6 +46,13 @@
 			</TableRow>
 		</TableHeader>
 		<TableBody>
+			{#if filteredUsers.length === 0}
+				<TableRow>
+					<TableCell colspan={7} class="h-24 text-center text-muted-foreground">
+						No users found.
+					</TableCell>
+				</TableRow>
+			{/if}
 			{#each filteredUsers as user}
 				<TableRow>
 					<TableCell>

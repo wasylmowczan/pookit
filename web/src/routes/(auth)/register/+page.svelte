@@ -125,7 +125,7 @@
 	<!-- Left: Form -->
 	<div class="flex items-center justify-center p-8">
 		<div class="w-full max-w-sm flex flex-col gap-4">
-			<Card class="w-full">
+			<Card class="w-full shadow-sm">
 				<CardHeader>
 					<CardTitle class="text-2xl">Register</CardTitle>
 				</CardHeader>

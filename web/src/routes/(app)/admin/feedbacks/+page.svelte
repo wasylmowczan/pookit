@@ -24,7 +24,7 @@
 		<FeedbackStats {data} />
 
 		<!-- Users table section -->
-		<Card>
+		<Card class="shadow-sm">
 			<CardHeader>
 				<div class="flex items-center justify-between">
 					<CardTitle

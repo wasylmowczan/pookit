@@ -48,7 +48,7 @@
 
 <div class="grid gap-4 md:grid-cols-3">
 	{#each stats as stat}
-		<Card>
+		<Card class="shadow-sm">
 			<CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<CardTitle class="text-sm font-medium">{stat.title}</CardTitle>
 				{#if stat.icon}

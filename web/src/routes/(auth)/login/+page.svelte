@@ -264,7 +264,7 @@
 <div class="min-h-screen grid lg:grid-cols-2">
 	<!-- Left: Form -->
 	<div class="flex flex-col items-center justify-center p-8 gap-3">
-		<Card class="w-full max-w-sm relative z-20">
+		<Card class="w-full max-w-sm relative z-20 shadow-sm">
 			<CardHeader class="pb-2">
 				<CardTitle class="text-2xl">Welcome Back</CardTitle>
 				<p class="text-sm text-muted-foreground">Choose your preferred login method</p>

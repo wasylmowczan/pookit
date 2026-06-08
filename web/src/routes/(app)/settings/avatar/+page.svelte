@@ -104,7 +104,7 @@
 	});
 </script>
 
-<Card>
+<Card class="shadow-sm">
 	<form method="POST" action="?/updateAvatar" use:enhance enctype="multipart/form-data">
 		<CardHeader>
 			<CardTitle>Avatar</CardTitle>

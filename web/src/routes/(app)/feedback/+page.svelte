@@ -37,7 +37,7 @@
 <div
 	class="w-full min-h-[calc(100vh-10rem)] flex items-center justify-center p-4"
 >
-	<Card class="w-full max-w-2xl">
+	<Card class="w-full max-w-2xl shadow-sm">
 		<CardHeader>
 			<CardTitle>Feedback</CardTitle>
 			<CardDescription>We value your feedback to improve our services</CardDescription>

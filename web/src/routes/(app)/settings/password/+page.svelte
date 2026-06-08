@@ -41,7 +41,7 @@
 	const { form: formData, enhance } = form;
 </script>
 
-<Card>
+<Card class="shadow-sm">
 	<form action="?/updatePassword" method="POST" use:enhance>
 		<CardHeader>
 			<CardTitle>Change Password</CardTitle>

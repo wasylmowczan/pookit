@@ -33,6 +33,13 @@
 			</TableRow>
 		</TableHeader>
 		<TableBody>
+			{#if data.data.length === 0}
+				<TableRow>
+					<TableCell colspan={4} class="h-24 text-center text-muted-foreground">
+						No records yet.
+					</TableCell>
+				</TableRow>
+			{/if}
 			{#each data.data as row}
 				<TableRow>
 					<TableCell>

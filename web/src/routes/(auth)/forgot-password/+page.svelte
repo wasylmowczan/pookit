@@ -46,7 +46,7 @@
 <div class="min-h-screen grid lg:grid-cols-2">
 	<!-- Left: Form -->
 	<div class="flex items-center justify-center p-8">
-		<Card class="w-full max-w-sm">
+		<Card class="w-full max-w-sm shadow-sm">
 			<CardHeader>
 				<CardTitle class="text-2xl">Forgot Password</CardTitle>
 			</CardHeader>

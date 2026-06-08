@@ -142,7 +142,7 @@
 	<div class="container relative mx-auto overflow-hidden py-8 h-full max-w-3xl">
 		<h1 class="mb-8 text-3xl font-bold text-center">Changelog 📄</h1>
 		{#each changelog as entry}
-			<Card class="mb-8 border border-gray-700/70 dark:bg-gray-800 rounded-lg">
+			<Card class="mb-8 border border-gray-700/70 dark:bg-gray-800 rounded-lg shadow-sm">
 				<CardHeader>
 					<CardTitle class="flex items-center gap-2">
 						<Badge variant="outline">
