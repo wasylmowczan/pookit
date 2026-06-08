@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Menu } from '@lucide/svelte/icons';
+	import { Menu, X } from '@lucide/svelte/icons';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import * as Sheet from '$lib/components/ui/sheet/index.js';
 	import { ThemeSwitcher } from '$lib/components/modules/index';
+	import { cn } from '$lib/utils';
 	import Logo from '../Logo.svelte';
 
 	interface Props {
@@ -13,47 +13,94 @@
 	}
 
 	let { menuItems }: Props = $props();
+
+	let isScrolled = $state(false);
+	let menuState = $state(false);
+
+	$effect(() => {
+		const onScroll = () => {
+			isScrolled = window.scrollY > 20;
+		};
+		window.addEventListener('scroll', onScroll, { passive: true });
+		return () => window.removeEventListener('scroll', onScroll);
+	});
 </script>
 
-<header
-	class="z-50 bg-muted sticky top-0 flex h-16 justify-between items-center gap-4 px-4 md:px-6"
->
-	<div class="flex gap-2 items-center">
-		<Sheet.Root>
-			<Sheet.Trigger>
-				<Button variant="outline" size="icon" class="shrink-0 md:hidden">
-					<Menu class="h-5 w-5" />
-					<span class="sr-only">Toggle navigation menu</span>
-				</Button>
-			</Sheet.Trigger>
-			<Sheet.Content side="left">
-				<nav class="grid gap-6 text-lg font-medium">
-					<Logo />
-					{#each menuItems as { name, href }}
-						<a {href} class="hover:text-foreground">
-							{name}
-						</a>
-					{/each}
-				</nav>
-			</Sheet.Content>
-		</Sheet.Root>
-		<div class="hidden md:block">
-			<Logo />
+<header>
+	<nav class="fixed z-20 w-full">
+		<div
+			class={cn(
+				'w-full bg-muted px-6 transition-all duration-300 lg:px-12',
+				isScrolled && 'border-b'
+			)}
+		>
+			<div class="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
+				<div class="flex w-full justify-between lg:w-auto">
+					<a href="/" aria-label="home" class="flex items-center space-x-2">
+						<Logo />
+					</a>
+					<button
+						onclick={() => (menuState = !menuState)}
+						aria-label={menuState ? 'Close Menu' : 'Open Menu'}
+						class="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
+					>
+						<Menu
+							class={cn(
+								'm-auto size-6 duration-200',
+								menuState && 'scale-0 rotate-180 opacity-0'
+							)}
+						/>
+						<X
+							class={cn(
+								'absolute inset-0 m-auto size-6 scale-0 -rotate-180 opacity-0 duration-200',
+								menuState && 'scale-100 rotate-0 opacity-100'
+							)}
+						/>
+					</button>
+				</div>
+
+				<div class="absolute inset-0 m-auto hidden size-fit lg:block">
+					<ul class="flex gap-8 text-sm">
+						{#each menuItems as item}
+							<li>
+								<a
+									href={item.href}
+									class="block text-muted-foreground duration-150 hover:text-foreground"
+								>
+									{item.name}
+								</a>
+							</li>
+						{/each}
+					</ul>
+				</div>
+
+				<div
+					class={cn(
+						'mb-6 w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border bg-background p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent',
+						menuState ? 'block lg:flex' : 'hidden lg:flex'
+					)}
+				>
+					<div class="lg:hidden">
+						<ul class="space-y-6 text-base">
+							{#each menuItems as item}
+								<li>
+									<a
+										href={item.href}
+										class="block text-muted-foreground duration-150 hover:text-foreground"
+									>
+										{item.name}
+									</a>
+								</li>
+							{/each}
+						</ul>
+					</div>
+
+					<div class="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit items-center">
+						<ThemeSwitcher />
+						<Button size="sm" href="/login">Get Started</Button>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-	<nav class="hidden text-lg font-medium md:flex md:flex-row">
-		{#each menuItems as { name, href }}
-			<Button
-				variant="ghost"
-				{href}
-				class="font-bold hover:text-foreground transition-colors"
-			>
-				{name}
-			</Button>
-		{/each}
 	</nav>
-	<div class="flex items-center gap-4 md:gap-2 lg:gap-4">
-		<Button variant="outline" href="/login" class="hidden md:block">Get Started</Button>
-		<ThemeSwitcher />
-	</div>
 </header>
