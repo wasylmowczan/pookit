@@ -42,6 +42,18 @@
 
 	const features: RoadmapFeature[] = [
 		{
+			title: 'Extra landing pages.',
+			description: 'Create extra landing pages for different use cases like SaaS, e-commerce, etc.',
+			status: 'Pending',
+			tags: ['Suggestions']
+		},
+		{
+			title: 'Released apps',
+			description: 'Create page with released apps using Pookit.',
+			status: 'Approved',
+			tags: ['Suggestions']
+		},
+		{
 			title: 'Google login',
 			description: 'It would be good to have a possibility to login with Google account.',
 			status: 'Done',
@@ -60,11 +72,7 @@
 		<h1 class="mb-12 text-3xl font-bold text-center">Roadmap 🎯</h1>
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 			{#each statusColumns as column}
-				<div
-					class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4"
-					role="region"
-					aria-labelledby={column.title}
-				>
+				<div class="p-4" role="region" aria-labelledby={column.title}>
 					<div class="flex items-center gap-2 mb-4">
 						<span class="text-lg">{column.icon}</span>
 						<h2 class="font-semibold">{column.title}</h2>
@@ -72,16 +80,14 @@
 
 					<div class="space-y-4">
 						{#each features.filter((f) => f.status === column.status) as feature}
-							<div
-								class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700"
-							>
+							<div class="rounded-lg p-4 shadow-sm border">
 								<div class="flex items-start justify-between">
 									<div class="flex items-start gap-2">
 										<h3 class="font-medium">{feature.title}</h3>
 									</div>
 								</div>
 
-								<p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+								<p class="text-sm text-gray-500 mt-2">
 									{feature.description}
 								</p>
 
