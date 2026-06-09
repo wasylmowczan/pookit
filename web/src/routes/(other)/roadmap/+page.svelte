@@ -55,7 +55,34 @@
 		},
 		{
 			title: 'Google login',
-			description: 'It would be good to have a possibility to login with Google account.',
+			description: 'Sign in with your Google account — no password needed.',
+			status: 'Done',
+			tags: ['Enhancement']
+		},
+		{
+			title: 'OTP email login',
+			description: 'Passwordless login via a one-time code sent to your email address.',
+			status: 'Done',
+			tags: ['BigFeature']
+		},
+		{
+			title: 'Polar.sh payments',
+			description:
+				'Full billing integration with Polar.sh — subscriptions, one-time purchases and webhooks.',
+			status: 'Done',
+			tags: ['BigFeature']
+		},
+		{
+			title: 'Transactional emails with Resend',
+			description:
+				'Email delivery for verification, notifications and OTP codes powered by Resend.',
+			status: 'Done',
+			tags: ['BigFeature']
+		},
+		{
+			title: 'PostHog analytics',
+			description:
+				'User event tracking and product analytics integrated across auth and key app flows.',
 			status: 'Done',
 			tags: ['Enhancement']
 		}
