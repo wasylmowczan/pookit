@@ -154,7 +154,18 @@
 		</div>
 	</div>
 {:else}
-	<Sidebar.Provider>
+	{#if data.isImpersonating}
+		<div class="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 bg-amber-400 px-4 py-2 text-sm font-medium text-amber-950">
+			<span>Impersonating <strong>{data.user?.email}</strong></span>
+			<a
+				href="/api/impersonate-exit"
+				class="rounded-md bg-amber-950/10 px-3 py-1 text-xs font-semibold transition-colors hover:bg-amber-950/20"
+			>
+				Exit impersonation
+			</a>
+		</div>
+	{/if}
+	<Sidebar.Provider class={data.isImpersonating ? 'pt-9' : ''}>
 		<AppSidebar {menu} {showNavAdmin} user={data.user} />
 		<Sidebar.Inset>
 			<header class="flex h-16 shrink-0 items-center justify-between gap-2">

@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import { isAdminUser, getSuperuserClient } from '$lib/server/pocketbase-superuser';
 
-export const load = async ({ locals }) => {
+export const load = async ({ locals, cookies }) => {
 	if (!locals.pb.authStore.isValid || !locals.user) {
 		redirect(303, '/login');
 	}
@@ -40,6 +40,7 @@ export const load = async ({ locals }) => {
 	return {
 		user: locals.user,
 		isAdmin: isAdminUser(locals.user),
-		activeBan
+		activeBan,
+		isImpersonating: !!cookies.get('pb_admin_backup')
 	};
 };

@@ -29,6 +29,7 @@
 				{
 					type: LogType.NewFeature,
 					items: [
+						'Admin panel: admins can now impersonate any user directly from the users table. An amber banner is shown during the session with a one-click exit that restores the admin session.',
 						'Admin panel: users table now supports pagination, row selection with checkboxes, and a three-dot actions menu per row.',
 						'Admin panel: admins can ban users with a reason and optional expiry date. Banned users are blocked from accessing the app and shown an Account Suspended screen.',
 						'Admin panel: admins can lift bans at any time. Expired bans are automatically lifted on next login.',

@@ -70,13 +70,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	const response = await resolve(event);
-	response.headers.set(
-		'set-cookie',
-		event.locals.pb.authStore.exportToCookie({
-			secure: false,
-			sameSite: 'lax'
-		})
-	);
+	const authCookie = event.locals.pb.authStore.exportToCookie({ secure: false, sameSite: 'lax' });
+
+	// Preserve cookies set by route handlers (e.g. impersonation backup), then write auth cookie
+	const others = (response.headers.getSetCookie?.() ?? []).filter((c) => !c.startsWith('pb_auth='));
+	response.headers.delete('set-cookie');
+	for (const c of others) response.headers.append('set-cookie', c);
+	response.headers.append('set-cookie', authCookie);
 
 	return response;
 };

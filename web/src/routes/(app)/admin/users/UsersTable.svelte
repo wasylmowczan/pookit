@@ -126,6 +126,19 @@
 		if (!user.ban_expires) return true;
 		return new Date(user.ban_expires) > new Date();
 	}
+
+	async function handleImpersonate(userId: string) {
+		const res = await fetch('/api/impersonate-token', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ userId })
+		});
+		const data = await res.json();
+		if (data.token) {
+			const params = new URLSearchParams({ token: data.token, record: JSON.stringify(data.record) });
+			window.location.href = `/api/impersonate?${params}`;
+		}
+	}
 </script>
 
 <BanDialog bind:open={banDialogOpen} user={banTarget} />
@@ -227,6 +240,10 @@
 								</DropdownMenuItem>
 								<DropdownMenuItem onclick={() => copyToClipboard(user.email)}>
 									Copy email
+								</DropdownMenuItem>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem class="cursor-pointer" onclick={() => handleImpersonate(user.id)}>
+									Impersonate
 								</DropdownMenuItem>
 								<DropdownMenuSeparator />
 								{#if banned}
