@@ -12,6 +12,7 @@
 	import CardTitle from '$lib/components/ui/card/card-title.svelte';
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
 	import CardFooter from '$lib/components/ui/card/card-footer.svelte';
+	import CardDescription from '$lib/components/ui/card/card-description.svelte';
 	import FormLabel from '$lib/components/ui/form/form-label.svelte';
 	import FormFieldErrors from '$lib/components/ui/form/form-field-errors.svelte';
 
@@ -36,7 +37,11 @@
 	<form action="?/deleteAccount" method="POST" use:enhance>
 		<CardHeader>
 			<CardTitle>Delete Account</CardTitle>
+			<CardDescription>
+				Once you delete your account, there is no going back. Please be certain.
+			</CardDescription>
 		</CardHeader>
+		<br />
 		<CardContent>
 			<FormField {form} name="word">
 				<FormControl>

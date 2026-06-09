@@ -3,6 +3,7 @@
 	import { writable } from 'svelte/store';
 	import { Card } from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
 	import { FormControl, FormField } from '$lib/components/ui/form';
 	import { fileProxy, superForm } from 'sveltekit-superforms';
 	import { untrack } from 'svelte';
@@ -13,9 +14,11 @@
 	import CardHeader from '$lib/components/ui/card/card-header.svelte';
 	import CardTitle from '$lib/components/ui/card/card-title.svelte';
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
+	import CardDescription from '$lib/components/ui/card/card-description.svelte';
 	import FormFieldErrors from '$lib/components/ui/form/form-field-errors.svelte';
 	import CardFooter from '$lib/components/ui/card/card-footer.svelte';
-	import { UpdateAvatarSchema } from '$lib/schemas.js';
+	import FormLabel from '$lib/components/ui/form/form-label.svelte';
+	import { UpdateProfileSchema } from '$lib/schemas.js';
 	import { config } from '$lib/config-client.js';
 
 	let { data } = $props();
@@ -28,23 +31,23 @@
 		untrack(() => data.form),
 		{
 			dataType: 'json',
-			validators: zod(UpdateAvatarSchema),
+			validators: zod(UpdateProfileSchema),
+			resetForm: false,
 			onSubmit: () => {
 				loading = true;
 			},
 			onResult({ result }) {
 				loading = false;
 				if (result.type === 'success') {
-					toast.success('Avatar updated');
+					toast.success('Profile updated.');
 				} else {
-					toast.error('Failed to update avatar');
+					toast.error('Failed to update profile.');
 				}
 			}
 		}
 	);
 
 	const file = fileProxy(form, 'avatar');
-
 	const { form: formData, enhance } = form;
 
 	const avatarState = writable({
@@ -95,6 +98,7 @@
 			return $formData;
 		});
 	}
+
 	const unsubscribe = avatarState.subscribe((value) => {
 		currentAvatarUrl = value.currentAvatarUrl;
 	});
@@ -105,56 +109,69 @@
 </script>
 
 <Card class="shadow-sm">
-	<form method="POST" action="?/updateAvatar" use:enhance enctype="multipart/form-data">
+	<form method="POST" action="?/updateProfile" use:enhance enctype="multipart/form-data">
 		<CardHeader>
-			<CardTitle>Avatar</CardTitle>
+			<CardTitle>Profile</CardTitle>
+			<CardDescription>Update your name and avatar.</CardDescription>
 		</CardHeader>
-		<CardContent>
-			<div class="w-32 h-32 mx-auto mb-8">
-				{#if avatarPreview || currentAvatarUrl}
-					<img
-						src={avatarPreview || currentAvatarUrl}
-						alt="Avatar"
-						class="w-full h-full object-cover rounded-full"
-					/>
-				{:else}
-					<img src={AltAvatar} alt="avatar" />
-				{/if}
-			</div>
-			<div class="flex gap-2">
-				<FormField {form} name="avatar" class="w-full">
-					<FormControl>
-						<Button
-							variant="outline"
-							class="w-full gap-2"
-							onclick={() => document.getElementById('upload')?.click()}
-						>
-							<Camera />
-							Change
-						</Button>
-						<input
-							onchange={handleFileChange}
-							id="upload"
-							hidden
-							type="file"
-							name="avatar"
-							bind:files={$file}
+		<CardContent class="flex flex-col gap-6">
+			<div>
+				<div class="w-32 h-32 mx-auto mb-4">
+					{#if avatarPreview || currentAvatarUrl}
+						<img
+							src={avatarPreview || currentAvatarUrl}
+							alt="Avatar"
+							class="w-full h-full object-cover rounded-full"
 						/>
-					</FormControl>
-					<FormFieldErrors />
-				</FormField>
-				{#if avatarPreview || currentAvatarUrl}
+					{:else}
+						<img src={AltAvatar} alt="avatar" />
+					{/if}
+				</div>
+				<div class="flex gap-2">
 					<FormField {form} name="avatar" class="w-full">
 						<FormControl>
-							<Button variant="outline" class="w-full gap-2" onclick={deleteAvatar}>
-								<Trash />
-								Delete
+							<Button
+								variant="outline"
+								class="w-full gap-2"
+								onclick={() => document.getElementById('upload')?.click()}
+							>
+								<Camera />
+								Change
 							</Button>
+							<input
+								onchange={handleFileChange}
+								id="upload"
+								hidden
+								type="file"
+								name="avatar"
+								bind:files={$file}
+							/>
 						</FormControl>
 						<FormFieldErrors />
 					</FormField>
-				{/if}
+					{#if avatarPreview || currentAvatarUrl}
+						<FormField {form} name="avatar" class="w-full">
+							<FormControl>
+								<Button variant="outline" class="w-full gap-2" onclick={deleteAvatar}>
+									<Trash />
+									Delete
+								</Button>
+							</FormControl>
+							<FormFieldErrors />
+						</FormField>
+					{/if}
+				</div>
 			</div>
+
+			<FormField {form} name="name">
+				<FormControl>
+					{#snippet children({ props })}
+						<FormLabel>Name</FormLabel>
+						<Input {...props} bind:value={$formData.name} />
+					{/snippet}
+				</FormControl>
+				<FormFieldErrors />
+			</FormField>
 		</CardContent>
 		<CardFooter class="border-t px-6 py-4">
 			<Button type="submit" disabled={loading}>

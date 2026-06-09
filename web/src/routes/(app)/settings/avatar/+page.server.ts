@@ -1,5 +1,5 @@
 import { zod4 as zod } from 'sveltekit-superforms/adapters';
-import { UpdateAvatarSchema } from '$lib/schemas.js';
+import { UpdateProfileSchema } from '$lib/schemas.js';
 import { redirect, type Actions, error, fail } from '@sveltejs/kit';
 import { setError, superValidate, withFiles } from 'sveltekit-superforms/server';
 import { ClientResponseError } from 'pocketbase';
@@ -10,18 +10,18 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw redirect(303, '/login');
 	}
 	return {
-		form: await superValidate(locals.user, zod(UpdateAvatarSchema))
+		form: await superValidate(locals.user, zod(UpdateProfileSchema))
 	};
 };
 
 export const actions: Actions = {
-	updateAvatar: async ({ request, locals }) => {
+	updateProfile: async ({ request, locals }) => {
 		if (!locals.pb.authStore.isValid || !locals.user) {
 			throw error(401, 'Unauthorized');
 		}
 
 		const formData = await request.formData();
-		const form = await superValidate(formData, zod(UpdateAvatarSchema));
+		const form = await superValidate(formData, zod(UpdateProfileSchema));
 
 		if (!form.valid) {
 			return fail(400, withFiles({ form }));
@@ -34,7 +34,11 @@ export const actions: Actions = {
 			if (err instanceof ClientResponseError) {
 				// eslint-disable-next-line no-console
 				console.error('PocketBase error:', err);
-				setError(form, 'avatar', 'Failed to update avatar.');
+				if (err.response.data.name) {
+					setError(form, 'name', err.response.data.name.message);
+				} else {
+					setError(form, 'avatar', 'Failed to update avatar.');
+				}
 			} else {
 				// eslint-disable-next-line no-console
 				console.error('Unexpected error:', err);

@@ -49,12 +49,13 @@ export const UpdateAvatarSchema = z.object({
 	avatar: z.union([z.instanceof(File), z.string(), z.null()]).optional()
 });
 
-export const UpdateEmailSchema = z.object({
-	email: z.string({ error: 'Email is required' }).email({ message: 'Email must be a valid email' })
+export const UpdateProfileSchema = z.object({
+	avatar: z.union([z.instanceof(File), z.string(), z.null()]).optional(),
+	name: z.string({ error: 'Name is required' })
 });
 
-export const UpdateNameSchema = z.object({
-	name: z.string({ error: 'Name is required' })
+export const UpdateEmailSchema = z.object({
+	email: z.string({ error: 'Email is required' }).email({ message: 'Email must be a valid email' })
 });
 
 export const UpdatePasswordSchema = z

@@ -30,9 +30,9 @@
 			onResult: ({ result }) => {
 				loading = false;
 				if (result.type === 'success') {
-					toast.success('Password updated');
+					toast.success('Password updated. You will be logged out now.');
 				} else {
-					toast.error('Failed to update password');
+					toast.error('Failed to update password.');
 				}
 			}
 		}
@@ -47,6 +47,7 @@
 			<CardTitle>Change Password</CardTitle>
 			<CardDescription>You will be logged out after changing your password.</CardDescription>
 		</CardHeader>
+		<br />
 		<CardContent>
 			<FormField {form} name="oldPassword">
 				<FormControl>

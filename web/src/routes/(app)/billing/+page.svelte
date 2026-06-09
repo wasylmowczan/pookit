@@ -53,13 +53,11 @@
 	const isSingle = $derived(productCount === 1);
 </script>
 
-<div class="w-full px-6 py-8 space-y-10">
-	<header class="space-y-1">
-		<h1 class="text-2xl font-semibold tracking-tight">Billing</h1>
-		<p class="text-sm text-muted-foreground">Manage your subscription and billing information.</p>
-	</header>
-
-	<hr class="border-border" />
+<div class="w-full p-6 space-y-10">
+	<div>
+		<h1 class="text-3xl font-bold tracking-tight">Billing</h1>
+		<p>Manage your subscription and billing information.</p>
+	</div>
 
 	<!-- Current plan summary -->
 	<section class="space-y-3">
@@ -85,7 +83,9 @@
 								<dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm">
 									<dt class="text-muted-foreground">Price</dt>
 									<dd class="font-medium">
-										{formatAmount(sub!.amount, sub!.currency)} / {String(sub!.recurring_interval ?? 'month')}
+										{formatAmount(sub!.amount, sub!.currency)} / {String(
+											sub!.recurring_interval ?? 'month'
+										)}
 									</dd>
 
 									{#if sub!.current_period_start || sub!.current_period_end}
@@ -103,7 +103,9 @@
 									{#if sub!.current_period_end && !sub!.cancel_at_period_end}
 										<dt class="text-muted-foreground">Next payment</dt>
 										<dd class="font-medium">
-											{formatAmount(sub!.amount, sub!.currency)} on {formatDate(sub!.current_period_end)}
+											{formatAmount(sub!.amount, sub!.currency)} on {formatDate(
+												sub!.current_period_end
+											)}
 										</dd>
 									{/if}
 								</dl>
@@ -250,7 +252,11 @@
 					{@const checkoutHref = `/api/checkout?product=${encodeURIComponent(product.id)}`}
 					{@const isHighlighted = !isCurrent && productCount >= 2 && i === productCount - 1}
 
-					<Card class={isHighlighted ? 'border-primary shadow-lg relative overflow-visible' : 'relative shadow-sm'}>
+					<Card
+						class={isHighlighted
+							? 'border-primary shadow-lg relative overflow-visible'
+							: 'relative shadow-sm'}
+					>
 						{#if isHighlighted}
 							<div class="absolute -top-3 left-1/2 -translate-x-1/2">
 								<Badge variant="default" class="px-3 py-0.5 text-xs shadow-sm">Most popular</Badge>
