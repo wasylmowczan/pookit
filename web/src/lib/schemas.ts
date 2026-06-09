@@ -78,6 +78,16 @@ export const DeleteUserSchema = z.object({
 	word: z.string().refine((data) => data === 'DELETE', { message: 'Word must be "DELETE"' })
 });
 
+export const BanUserSchema = z.object({
+	userId: z.string().min(1),
+	reason: z.string().min(1, { message: 'Ban reason is required' }),
+	expiresAt: z.string().optional()
+});
+
+export const LiftBanSchema = z.object({
+	userId: z.string().min(1)
+});
+
 export const feedbackSchema = z.object({
 	name: z.string().min(3, { message: 'Name must be at least 3 characters' }),
 	email: z.string().email('Invalid email address'),

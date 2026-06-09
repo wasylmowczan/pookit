@@ -24,6 +24,19 @@
 
 	const changelog: ChangelogEntry[] = [
 		{
+			date: '2026-06-09',
+			logs: [
+				{
+					type: LogType.NewFeature,
+					items: [
+						'Admin panel: users table now supports pagination, row selection with checkboxes, and a three-dot actions menu per row.',
+						'Admin panel: admins can ban users with a reason and optional expiry date. Banned users are blocked from accessing the app and shown an Account Suspended screen.',
+						'Admin panel: admins can lift bans at any time. Expired bans are automatically lifted on next login.'
+					]
+				}
+			]
+		},
+		{
 			date: '2026-06-07',
 			logs: [
 				{

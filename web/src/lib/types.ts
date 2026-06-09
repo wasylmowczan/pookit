@@ -7,6 +7,9 @@ export interface User extends RecordModel {
 	name?: string;
 	avatar?: string;
 	polar_customer_id?: string;
+	banned?: boolean;
+	ban_reason?: string;
+	ban_expires?: string;
 }
 
 export type SubscriptionStatus =
