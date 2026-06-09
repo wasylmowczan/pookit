@@ -51,6 +51,26 @@ export const actions: Actions = {
 		}
 	},
 
+	deleteUser: async ({ request, locals }) => {
+		const superuserPb = await requireSuperuserClient(locals.user);
+		const formData = await request.formData();
+		const userId = formData.get('userId') as string;
+
+		if (!userId) {
+			return fail(400, { message: 'User ID is required' });
+		}
+
+		try {
+			await superuserPb.collection('users').delete(userId);
+			return { success: true };
+		} catch (err) {
+			if (err instanceof ClientResponseError) {
+				return fail(err.status || 500, { message: err.message });
+			}
+			return fail(500, { message: 'Failed to delete user' });
+		}
+	},
+
 	liftBan: async ({ request, locals }) => {
 		const superuserPb = await requireSuperuserClient(locals.user);
 		const formData = await request.formData();

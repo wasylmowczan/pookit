@@ -28,6 +28,7 @@
 	import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
 	import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
 	import BanDialog from './BanDialog.svelte';
+	import DeleteUserDialog from './DeleteUserDialog.svelte';
 
 	let { data, searchQuery }: { data: any; searchQuery: string } = $props();
 
@@ -37,7 +38,15 @@
 
 	// Ban dialog state
 	let banDialogOpen = $state(false);
-	let banTarget = $state<{ id: string; name?: string; username?: string; email: string } | null>(null);
+	let banTarget = $state<{ id: string; name?: string; username?: string; email: string } | null>(
+		null
+	);
+
+	// Delete dialog state
+	let deleteDialogOpen = $state(false);
+	let deleteTarget = $state<{ id: string; name?: string; username?: string; email: string } | null>(
+		null
+	);
 
 	let filteredUsers = $derived(
 		data.data.filter((user: any) => {
@@ -107,6 +116,11 @@
 		banDialogOpen = true;
 	}
 
+	function openDeleteDialog(user: any) {
+		deleteTarget = { id: user.id, name: user.name, username: user.username, email: user.email };
+		deleteDialogOpen = true;
+	}
+
 	function isActiveBan(user: any): boolean {
 		if (!user.banned) return false;
 		if (!user.ban_expires) return true;
@@ -115,6 +129,7 @@
 </script>
 
 <BanDialog bind:open={banDialogOpen} user={banTarget} />
+<DeleteUserDialog bind:open={deleteDialogOpen} user={deleteTarget} />
 
 <div>
 	<Table>
@@ -218,32 +233,31 @@
 									<form
 										action="/admin/users?/liftBan"
 										method="POST"
-										use:enhance={() => async ({ result, update }) => {
-											if (result.type === 'success') {
-												await invalidateAll();
-											} else {
-												await update();
-											}
-										}}
+										use:enhance={() =>
+											async ({ result, update }) => {
+												if (result.type === 'success') {
+													await invalidateAll();
+												} else {
+													await update();
+												}
+											}}
 									>
 										<input type="hidden" name="userId" value={user.id} />
 										<DropdownMenuItem
 											class="cursor-pointer text-emerald-600 focus:text-emerald-600"
-											onclick={(e) => (e.currentTarget.closest('form') as HTMLFormElement)?.requestSubmit()}
+											onclick={(e) =>
+												(e.currentTarget.closest('form') as HTMLFormElement)?.requestSubmit()}
 										>
 											Lift ban
 										</DropdownMenuItem>
 									</form>
 								{:else}
-									<DropdownMenuItem
-										class="text-destructive focus:text-destructive"
-										onclick={() => openBanDialog(user)}
-									>
+									<DropdownMenuItem variant="destructive" onclick={() => openBanDialog(user)}>
 										Ban user
 									</DropdownMenuItem>
 								{/if}
 								<DropdownMenuSeparator />
-								<DropdownMenuItem class="text-destructive focus:text-destructive">
+								<DropdownMenuItem variant="destructive" onclick={() => openDeleteDialog(user)}>
 									Delete user
 								</DropdownMenuItem>
 							</DropdownMenuContent>
