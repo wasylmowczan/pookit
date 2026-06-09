@@ -33,10 +33,10 @@
 		currentPage = 1;
 	}
 
-	function badgeVariant(eventType: string) {
-		if (eventType === 'email.bounced') return 'destructive';
-		if (eventType === 'email.complained') return 'destructive';
-		return 'secondary';
+	function badgeClass(eventType: string) {
+		if (eventType === 'email.bounced') return 'bg-red-600 text-white';
+		if (eventType === 'email.complained') return 'bg-orange-500 text-white';
+		return 'bg-emerald-500 text-white';
 	}
 
 	function eventLabel(eventType: string) {
@@ -65,7 +65,7 @@
 			{#each paginated as row}
 				<TableRow>
 					<TableCell>
-						<Badge variant={badgeVariant(row.event_type)}>
+						<Badge class={badgeClass(row.event_type)}>
 							{eventLabel(row.event_type)}
 						</Badge>
 					</TableCell>
