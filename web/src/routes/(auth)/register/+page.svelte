@@ -56,6 +56,13 @@
 
 	const { form: formData, enhance } = form;
 
+	const steps = [
+		{ label: 'Sign up to your account' },
+		{ label: 'Add your name' },
+		{ label: 'Add your photo' },
+		{ label: 'Get Pro access' }
+	];
+
 	function handleGoogleLogin() {
 		// Open popup synchronously in the click handler so browsers treat it as
 		// user-initiated (prevents it from opening as a new tab instead of a popup).
@@ -215,12 +222,26 @@
 	</div>
 
 	<!-- Right: Image -->
-	<div class="hidden lg:block relative overflow-hidden rounded-l-2xl">
+	<div class="hidden lg:flex flex-col relative overflow-hidden rounded-l-2xl">
 		<img
 			src="/login.jpg"
 			alt="Register visual"
 			class="absolute inset-0 h-full w-full object-cover"
 		/>
 		<div class="absolute inset-0 bg-black/30"></div>
+
+		<!-- Step cards -->
+		<div class="absolute top-8 left-4 right-4 grid grid-cols-4 gap-2">
+			{#each steps as { label }, i}
+				<div class="flex flex-col items-center gap-3 p-4 backdrop-blur-md rounded-xl border text-center
+					{i === 0 ? 'bg-white/20 border-white/25' : 'bg-white/10 border-white/20'}">
+					<div class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold
+						{i === 0 ? 'bg-primary/80 text-white' : 'bg-white/20 text-white/70'}">
+						{i + 1}
+					</div>
+					<p class="text-xs font-medium leading-snug {i === 0 ? 'text-white' : 'text-white/60'}">{label}</p>
+				</div>
+			{/each}
+		</div>
 	</div>
 </div>
