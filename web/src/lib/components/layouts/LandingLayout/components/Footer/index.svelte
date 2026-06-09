@@ -3,6 +3,7 @@
 	import InstagramIcon from '$lib/components/icons/brands/Instagram.svelte';
 	import BlueSkyIcon from '$lib/components/icons/brands/BlueSky.svelte';
 
+	import svelteLogo from '$lib/assets/svelte_logo.svg';
 	import { config } from '$lib/config-client';
 
 	interface Props {
@@ -35,7 +36,7 @@
 	];
 </script>
 
-<footer class="bg-muted rounded-tl-3xl rounded-tr-3xl">
+<footer class="relative bg-muted rounded-tl-3xl rounded-tr-3xl">
 	<div class="max-w-7xl mx-auto pt-12 px-4 sm:px-6 lg:py-24 lg:px-8 pb-24">
 		<div class="grid md:grid-cols-4 gap-8">
 			<!-- 1 column -->
@@ -91,6 +92,10 @@
 				</ul>
 			</div>
 		</div>
+	</div>
+	<!-- Logo on top edge -->
+	<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-muted rounded-full p-2">
+		<img src={svelteLogo} alt="Logo" class="w-8 h-8" />
 	</div>
 	<!-- Footer Copyright -->
 	<div class="mb-8 pt-8">

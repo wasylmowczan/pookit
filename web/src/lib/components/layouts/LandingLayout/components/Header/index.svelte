@@ -45,10 +45,7 @@
 						class="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden"
 					>
 						<Menu
-							class={cn(
-								'm-auto size-6 duration-200',
-								menuState && 'scale-0 rotate-180 opacity-0'
-							)}
+							class={cn('m-auto size-6 duration-200', menuState && 'scale-0 rotate-180 opacity-0')}
 						/>
 						<X
 							class={cn(
@@ -95,9 +92,11 @@
 						</ul>
 					</div>
 
-					<div class="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit items-center">
+					<div
+						class="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit items-center"
+					>
 						<ThemeSwitcher />
-						<Button size="sm" href="/login">Get Started</Button>
+						<Button size="sm" href="/login">Login</Button>
 					</div>
 				</div>
 			</div>

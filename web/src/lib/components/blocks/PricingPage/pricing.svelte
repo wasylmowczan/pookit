@@ -14,13 +14,12 @@
 	let {
 		pricingList,
 		proPlans = [],
-		proCtaLabel = 'Get Started'
+		proCtaLabel = 'Start building'
 	} = $props<{
 		pricingList: { free: string[]; pro: string[] };
 		proPlans?: ProPlan[];
 		proCtaLabel?: string;
 	}>();
-
 </script>
 
 <section class="py-16 md:py-32">
@@ -92,7 +91,11 @@
 								</p>
 							</div>
 
-							<Button href={checkoutHref} class="w-full" variant={isHighlighted ? 'default' : 'outline'}>
+							<Button
+								href={checkoutHref}
+								class="w-full"
+								variant={isHighlighted ? 'default' : 'outline'}
+							>
 								{proCtaLabel}
 							</Button>
 
@@ -123,7 +126,12 @@
 							<p class="text-sm text-muted-foreground">Try it out and share your opinion.</p>
 						</div>
 
-						<Button href="/register" variant="outline" class="w-full">Get Started</Button>
+						<Button
+							href="https://github.com/wasylmowczan/pookit"
+							target="_blank"
+							variant="outline"
+							class="w-full">Grab a free version</Button
+						>
 
 						<hr class="border-dashed" />
 
@@ -145,14 +153,18 @@
 						<div class="space-y-4">
 							<div>
 								<h2 class="font-medium">{proPlans[0]?.name ?? 'Pro'}</h2>
-								<span class="my-3 block text-2xl font-semibold">{proPlans[0]?.priceLabel ?? '$99'}</span>
+								<span class="my-3 block text-2xl font-semibold"
+									>{proPlans[0]?.priceLabel ?? '$99'}</span
+								>
 								<p class="text-sm text-muted-foreground">
 									{proPlans[0]?.description ?? 'Perfect for Indie Hackers.'}
 								</p>
 							</div>
 
 							<Button
-								href={proPlans[0] ? `/api/checkout?product=${encodeURIComponent(proPlans[0].id)}` : '/register'}
+								href={proPlans[0]
+									? `/api/checkout?product=${encodeURIComponent(proPlans[0].id)}`
+									: '/register'}
 								class="w-full"
 							>
 								{proCtaLabel}
