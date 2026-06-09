@@ -19,10 +19,17 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import MoreHorizontal from '@lucide/svelte/icons/more-horizontal';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
+	import ChevronsRight from '@lucide/svelte/icons/chevrons-right';
 	import RespondDialog from './RespondDialog.svelte';
 	import DeleteFeedbackDialog from './DeleteFeedbackDialog.svelte';
 
 	let { data }: { data: any } = $props();
+
+	let currentPage = $state(1);
+	let rowsPerPage = $state(10);
 
 	let respondDialogOpen = $state(false);
 	let respondTarget = $state<{ id: string; name: string; email: string; feedback: string } | null>(
@@ -31,6 +38,20 @@
 
 	let deleteDialogOpen = $state(false);
 	let deleteTarget = $state<{ id: string; name: string; email: string } | null>(null);
+
+	let totalPages = $derived(Math.max(1, Math.ceil(data.data.length / rowsPerPage)));
+	let paginated = $derived(
+		data.data.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
+	);
+
+	function goToPage(page: number) {
+		currentPage = Math.max(1, Math.min(page, totalPages));
+	}
+
+	function handleRowsPerPageChange(e: Event) {
+		rowsPerPage = parseInt((e.target as HTMLSelectElement).value);
+		currentPage = 1;
+	}
 
 	function openRespondDialog(row: any) {
 		respondTarget = { id: row.id, name: row.name, email: row.email, feedback: row.feedback };
@@ -60,14 +81,14 @@
 			</TableRow>
 		</TableHeader>
 		<TableBody>
-			{#if data.data.length === 0}
+			{#if paginated.length === 0}
 				<TableRow>
 					<TableCell colspan={7} class="h-24 text-center text-muted-foreground">
 						No records yet.
 					</TableCell>
 				</TableRow>
 			{/if}
-			{#each data.data as row}
+			{#each paginated as row}
 				<TableRow>
 					<TableCell class="font-mono text-xs">{row.id}</TableCell>
 					<TableCell class="font-medium">{row.name}</TableCell>
@@ -127,4 +148,65 @@
 			{/each}
 		</TableBody>
 	</Table>
+
+	<div class="flex items-center justify-between px-4 py-3 text-sm text-muted-foreground">
+		<span>{data.data.length} total row(s).</span>
+
+		<div class="flex items-center gap-6">
+			<div class="flex items-center gap-2">
+				<span>Rows per page</span>
+				<select
+					value={rowsPerPage}
+					onchange={handleRowsPerPageChange}
+					class="h-8 rounded-md border border-input bg-background px-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+				>
+					<option value={10}>10</option>
+					<option value={20}>20</option>
+					<option value={50}>50</option>
+					<option value={100}>100</option>
+				</select>
+			</div>
+
+			<span>Page {currentPage} of {totalPages}</span>
+
+			<div class="flex items-center gap-1">
+				<Button
+					variant="outline"
+					size="icon"
+					class="h-8 w-8"
+					onclick={() => goToPage(1)}
+					disabled={currentPage === 1}
+				>
+					<ChevronsLeft class="h-4 w-4" />
+				</Button>
+				<Button
+					variant="outline"
+					size="icon"
+					class="h-8 w-8"
+					onclick={() => goToPage(currentPage - 1)}
+					disabled={currentPage === 1}
+				>
+					<ChevronLeft class="h-4 w-4" />
+				</Button>
+				<Button
+					variant="outline"
+					size="icon"
+					class="h-8 w-8"
+					onclick={() => goToPage(currentPage + 1)}
+					disabled={currentPage === totalPages}
+				>
+					<ChevronRight class="h-4 w-4" />
+				</Button>
+				<Button
+					variant="outline"
+					size="icon"
+					class="h-8 w-8"
+					onclick={() => goToPage(totalPages)}
+					disabled={currentPage === totalPages}
+				>
+					<ChevronsRight class="h-4 w-4" />
+				</Button>
+			</div>
+		</div>
+	</div>
 </div>
