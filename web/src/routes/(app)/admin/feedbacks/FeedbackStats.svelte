@@ -4,6 +4,7 @@
 		ArrowDownIcon,
 		MessageCircle,
 		MessageCirclePlus,
+		MessageCircleQuestion,
 		Equal
 	} from '@lucide/svelte';
 	import { Card, CardHeader, CardTitle, CardContent } from '$lib/components/ui/card';
@@ -30,6 +31,10 @@
 		icon: any;
 	}
 
+	const notRespondedFeedbacks = $derived(
+		data.data.filter((feedback: { responded: boolean }) => !feedback.responded).length
+	);
+
 	const stats: StatsItem[] = $derived([
 		{
 			title: 'Total',
@@ -42,6 +47,12 @@
 			value: newFeedbacks,
 			change: calculateChange(newFeedbacks, totalFeedbacks),
 			icon: MessageCirclePlus
+		},
+		{
+			title: 'Not Responded',
+			value: notRespondedFeedbacks,
+			change: calculateChange(notRespondedFeedbacks, totalFeedbacks),
+			icon: MessageCircleQuestion
 		}
 	]);
 </script>
