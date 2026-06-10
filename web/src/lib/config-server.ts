@@ -11,11 +11,5 @@ export const config = {
 	polarAccessToken: env.POLAR_ACCESS_TOKEN,
 	polarWebhookSecret: env.POLAR_WEBHOOK_SECRET,
 	// 'sandbox' | 'production'
-	polarServer: (env.POLAR_SERVER ?? 'production') as 'sandbox' | 'production',
-	// Comma-separated Polar product IDs that should be treated as "Pro" plan products.
-	// Used to flag the user as Pro when an active subscription matches one of these.
-	polarProProductIds: (env.POLAR_PRO_PRODUCT_IDS ?? '')
-		.split(',')
-		.map((s) => s.trim())
-		.filter(Boolean)
+	polarServer: (env.POLAR_SERVER ?? 'production') as 'sandbox' | 'production'
 };

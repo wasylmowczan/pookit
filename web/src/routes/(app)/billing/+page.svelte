@@ -159,50 +159,44 @@
 			{@const features = descriptionToFeatures(product.description)}
 			{@const checkoutHref = `/api/checkout?product=${encodeURIComponent(product.id)}`}
 
-			<div class="w-full max-w-2xl">
-				<Card class="relative overflow-hidden shadow-sm">
-					<!-- Decorative gradient blob -->
-					<div
-						class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
-						aria-hidden="true"
-					></div>
-
-					<CardHeader class="relative">
+			<div class="w-full max-w-xl">
+				<Card class="shadow-sm bg-muted/40">
+					<CardHeader class="pb-3">
 						<div class="flex items-start justify-between gap-4">
-							<div class="space-y-2">
+							<div class="space-y-1">
 								<div class="flex items-center gap-2">
-									<Sparkles class="size-4 text-primary" />
+									<Sparkles class="size-3.5 text-primary" />
 									<span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">
 										{product.recurringInterval ? 'Subscription' : 'One-time'}
 									</span>
 								</div>
-								<CardTitle class="text-2xl">{product.name}</CardTitle>
+								<CardTitle class="text-lg">{product.name}</CardTitle>
 							</div>
 							{#if isCurrent}
 								<Badge variant="default">Current plan</Badge>
 							{/if}
 						</div>
 
-						<div class="flex items-baseline gap-2 pt-4">
+						<div class="flex items-baseline gap-1.5 pt-2">
 							{#if product.priceAmount != null}
-								<span class="text-5xl font-bold tracking-tight">
+								<span class="text-3xl font-bold tracking-tight">
 									{formatAmount(product.priceAmount, product.priceCurrency)}
 								</span>
 								{#if product.recurringInterval}
-									<span class="text-base text-muted-foreground">/ {product.recurringInterval}</span>
+									<span class="text-sm text-muted-foreground">/ {product.recurringInterval}</span>
 								{/if}
 							{:else}
-								<span class="text-3xl font-bold tracking-tight">{product.priceLabel}</span>
+								<span class="text-2xl font-bold tracking-tight">{product.priceLabel}</span>
 							{/if}
 						</div>
 					</CardHeader>
 
-					<CardContent class="relative space-y-6">
+					<CardContent class="space-y-4">
 						{#if features.length > 0}
-							<ul class="grid gap-3 sm:grid-cols-2">
+							<ul class="space-y-1.5">
 								{#each features as feature}
 									<li class="flex items-start gap-2 text-sm">
-										<Check class="mt-0.5 size-4 shrink-0 text-primary" />
+										<Check class="mt-0.5 size-3.5 shrink-0 text-primary" />
 										<span>{feature}</span>
 									</li>
 								{/each}
@@ -214,20 +208,17 @@
 						{/if}
 
 						{#if isCurrent}
-							<Button class="w-full" size="lg" disabled>You're on this plan</Button>
+							<Button class="w-full" disabled>You're on this plan</Button>
 						{:else if sub && product.recurringInterval}
-							<Button class="w-full" size="lg" href="/api/portal" variant="outline">
-								Switch plan
-							</Button>
+							<Button class="w-full" href="/api/portal" variant="outline">Switch plan</Button>
 						{:else if product.isCustom}
-							<Button class="w-full" size="lg" href={checkoutHref}>
-								Choose amount
-								<ArrowRight class="ml-2 size-4" />
+							<Button class="w-full" href={checkoutHref}>
+								Choose amount <ArrowRight class="ml-2 size-4" />
 							</Button>
 						{:else if product.isFree}
-							<Button class="w-full" size="lg" disabled>Default plan</Button>
+							<Button class="w-full" disabled>Default plan</Button>
 						{:else}
-							<Button class="w-full" size="lg" href={checkoutHref}>
+							<Button class="w-full" href={checkoutHref}>
 								Get {product.name}
 								<ArrowRight class="ml-2 size-4" />
 							</Button>

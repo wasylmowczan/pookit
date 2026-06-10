@@ -6,7 +6,7 @@ import { config } from '$lib/config-server';
 // GET /api/portal
 // Creates a Polar Customer Portal session keyed by the PocketBase user id
 // (passed to Polar as `externalCustomerId` during checkout).
-export const GET: RequestHandler = async ({ locals }) => {
+export const GET: RequestHandler = async ({ url, locals }) => {
 	if (!locals.user) {
 		redirect(303, '/login?redirect=/billing');
 	}
@@ -20,7 +20,8 @@ export const GET: RequestHandler = async ({ locals }) => {
 	try {
 		const polar = getPolarClient();
 		const session = await polar.customerSessions.create({
-			externalCustomerId: locals.user.id
+			externalCustomerId: locals.user.id,
+			returnUrl: `${url.origin}/billing`
 		});
 		portalUrl = session.customerPortalUrl;
 
