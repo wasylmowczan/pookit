@@ -13,7 +13,7 @@
 
 	// TODO : [SEO] Change data for SEO
 	let {
-		title = `${config.appName} - True indie hacker boilerplate`,
+		title = `${config.appName} - True indie hacker boilerplate built with SvelteKit, Pocketbase and shadcn-svelte`,
 		description = `${config.appName} is a modern SaaS template/boilerplate built with SvelteKit, Pocketbase and shadcn-svelte. Includes auth, user & admin dashboard, user settings, and more.`,
 		keywords = 'SaaS, SvelteKit, PocketBase, shadcn-svelte, Starter Kit, Modern SaaS, Template, Boilerplate, Auth, User Dashboard, Admin Dashboard, User Settings',
 		image = 'https://pookit.dev/seo-image.png',
@@ -21,7 +21,7 @@
 	}: Props = $props();
 
 	let baseUrl = $derived(
-		config.baseUrl || (browser ? window.location.origin : 'https://pookit.dev/')
+		config.baseUrl || (browser ? window.location.origin : 'https://pookit.dev')
 	);
 	let path = $derived(page.url.pathname);
 	let fullUrl = $derived(`${baseUrl}${path}`);

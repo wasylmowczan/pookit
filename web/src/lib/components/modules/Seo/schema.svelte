@@ -12,12 +12,12 @@
 		{
 			question: 'What technologies does it use?',
 			answer:
-				'It is built with SvelteKit for the frontend, PocketBase as the backend and database, Tailwind CSS for styling, and Stripe for payments.'
+				'It is built with SvelteKit for the frontend, PocketBase as the backend and database, Tailwind CSS for styling, and Polar for payments.'
 		},
 		{
 			question: 'Do I need to set up my own server?',
 			answer:
-				'PocketBase is a single binary that you can run anywhere. You can self-host it on any VPS or cloud provider in minutes.'
+				'PocketBase is a single binary that you can run anywhere. You can self-host it on any VPS or cloud provider like PocketHost.io in minutes.'
 		},
 		{
 			question: 'Does it include authentication?',
@@ -26,7 +26,7 @@
 		},
 		{
 			question: 'Does it include payments?',
-			answer: 'Yes, Stripe subscriptions and one-time payments are pre-configured and ready to use.'
+			answer: 'Yes, Polar subscriptions and one-time payments are pre-configured and ready to use.'
 		},
 		{
 			question: 'Can I customize it?',
@@ -96,9 +96,21 @@
         },
         {
           "@type": "ListItem",
+          "position": "2",
+          "name": "Pricing",
+          "item": "${appUrl}/pricing"
+        },
+        {
+          "@type": "ListItem",
+          "position": "3",
+          "name": "Roadmap",
+          "item": "${appUrl}/roadmap"
+        },
+        {
+          "@type": "ListItem",
           "position": "4",
-          "name": "FAQ",
-          "item": "${appUrl}/#faq"
+          "name": "Changelog",
+          "item": "${appUrl}/changelog"
         }
       ]
     }
