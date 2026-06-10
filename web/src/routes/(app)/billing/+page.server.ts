@@ -1,6 +1,8 @@
 import type { PageServerLoad } from './$types';
 import { getPolarClient, buildPriceLabel } from '$lib/server/polar';
 import { config } from '$lib/config-server';
+import { getSuperuserClient } from '$lib/server/pocketbase-superuser';
+import type { User } from '$lib/types';
 
 export type DisplayProduct = {
 	id: string;
@@ -75,16 +77,27 @@ async function fetchPolarProducts(): Promise<DisplayProduct[]> {
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const pb = locals.pb;
+	const userId = locals.user!.id;
+	const polarCustomerId = (locals.user as User).polar_customer_id ?? null;
+
+	// Also match by polar_customer_id so orders/subscriptions saved with a null
+	// user field (e.g. when the webhook couldn't resolve the PB user at the time)
+	// are still surfaced for the correct customer.
+	const billingFilter = polarCustomerId
+		? `user = "${userId}" || polar_customer_id = "${polarCustomerId}"`
+		: `user = "${userId}"`;
+
+	// Superuser client bypasses listRule so the polar_customer_id fallback works.
+	const pbAdmin = await getSuperuserClient();
 
 	const [subscriptions, orders, products] = await Promise.all([
-		pb
+		pbAdmin
 			.collection('subscriptions')
-			.getFullList({ filter: `user = "${locals.user!.id}"`, sort: '-created' })
+			.getFullList({ filter: billingFilter, sort: '-created' })
 			.catch(() => [] as Array<Record<string, unknown>>),
-		pb
+		pbAdmin
 			.collection('orders')
-			.getFullList({ filter: `user = "${locals.user!.id}"`, sort: '-created' })
+			.getFullList({ filter: billingFilter, sort: '-created' })
 			.catch(() => [] as Array<Record<string, unknown>>),
 		fetchPolarProducts()
 	]);
