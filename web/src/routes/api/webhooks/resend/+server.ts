@@ -3,8 +3,6 @@ import { config } from '$lib/config-server';
 import { getSuperuserClient } from '$lib/server/pocketbase-superuser';
 import type { RequestHandler } from '@sveltejs/kit';
 
-const resend = new Resend(config.resendApiKey);
-
 async function saveEmailEvent(
 	eventType: string,
 	emailId: string,
@@ -23,6 +21,7 @@ async function saveEmailEvent(
 }
 
 export const POST: RequestHandler = async ({ request }) => {
+	const resend = new Resend(config.resendApiKey);
 	// Must use raw text — parsing JSON breaks signature verification
 	const payload = await request.text();
 
