@@ -1,6 +1,7 @@
 <script lang="ts">
 	interface Props {
 		color?: string;
+		secondaryColor?: string;
 		size?: number;
 		strokeWidth?: number;
 		isHovered?: boolean;
@@ -9,8 +10,9 @@
 
 	let {
 		color = 'currentColor',
+		secondaryColor = 'currentColor',
 		size = 18,
-		strokeWidth = 2,
+		strokeWidth = 1.5,
 		isHovered = $bindable(false),
 		classes = ''
 	}: Props = $props();
@@ -49,13 +51,17 @@
 			class="pen"
 			class:animate={isHovered}
 		/>
-		<circle cx="10" cy="8" r="5" />
+		<circle cx="10" cy="8" r="5" fill={secondaryColor} class="user-circle" />
 	</svg>
 </div>
 
 <style>
 	.user-round-pen-icon {
 		overflow: visible;
+	}
+
+	.user-circle {
+		opacity: 0.3;
 	}
 
 	.pen {

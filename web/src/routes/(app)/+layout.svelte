@@ -8,7 +8,7 @@
 	import RoadmapIcon from '$lib/components/icons/common/plain.svelte';
 	import SpeechIcon from '$lib/components/icons/common/speech.svelte';
 	import UsersIcon from '$lib/components/icons/common/users.svelte';
-	import TextIcon from '$lib/components/icons/common/text.svelte';
+	import DashboardIcon from '$lib/components/icons/common/dashboard.svelte';
 	import MailCheckIcon from '$lib/components/icons/common/mail-check.svelte';
 	import { config } from '$lib/config-client';
 	import { posthog } from 'posthog-js';
@@ -31,7 +31,7 @@
 				{
 					title: 'Dashboard',
 					url: '/dashboard',
-					icon: TextIcon,
+					icon: DashboardIcon,
 					isActive: true
 				}
 			]
@@ -96,7 +96,9 @@
 			<!-- icon -->
 			<div class="relative">
 				<div class="absolute inset-0 rounded-full bg-destructive/20 blur-xl"></div>
-				<div class="relative flex h-20 w-20 items-center justify-center rounded-full border border-destructive/20 bg-destructive/10 shadow-sm">
+				<div
+					class="relative flex h-20 w-20 items-center justify-center rounded-full border border-destructive/20 bg-destructive/10 shadow-sm"
+				>
 					<BanIcon class="h-9 w-9 text-destructive" strokeWidth={1.5} />
 				</div>
 			</div>
@@ -112,7 +114,9 @@
 			<!-- details card -->
 			<div class="w-full overflow-hidden rounded-xl border bg-card shadow-sm">
 				<div class="border-b px-5 py-4">
-					<p class="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Reason</p>
+					<p class="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+						Reason
+					</p>
 					<p class="mt-1.5 text-sm font-medium">{data.activeBan.reason}</p>
 				</div>
 				<div class="px-5 py-4">
@@ -146,7 +150,10 @@
 				</p>
 				<button
 					class="inline-flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-					onclick={async () => { await fetch('/api/logout'); window.location.href = '/'; }}
+					onclick={async () => {
+						await fetch('/api/logout');
+						window.location.href = '/';
+					}}
 				>
 					Sign out
 				</button>
@@ -155,7 +162,9 @@
 	</div>
 {:else}
 	{#if data.isImpersonating}
-		<div class="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 bg-amber-400 px-4 py-2 text-sm font-medium text-amber-950">
+		<div
+			class="fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 bg-amber-400 px-4 py-2 text-sm font-medium text-amber-950"
+		>
 			<span>Impersonating <strong>{data.user?.email}</strong></span>
 			<a
 				href="/api/impersonate-exit"

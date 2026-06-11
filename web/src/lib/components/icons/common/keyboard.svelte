@@ -1,6 +1,7 @@
 <script lang="ts">
 	interface Props {
 		color?: string;
+		secondaryColor?: string;
 		size?: number;
 		strokeWidth?: number;
 		isHovered?: boolean;
@@ -9,8 +10,9 @@
 
 	let {
 		color = 'currentColor',
+		secondaryColor = 'currentColor',
 		size = 18,
-		strokeWidth = 2,
+		strokeWidth = 1.5,
 		isHovered = $bindable(false),
 		classes = ''
 	}: Props = $props();
@@ -54,6 +56,7 @@
 		stroke-linejoin="round"
 		class="keyboard-icon"
 	>
+		<rect width="20" height="16" x="2" y="4" rx="2" fill={secondaryColor} stroke="none" class="keyboard-bg" />
 		<rect width="20" height="16" x="2" y="4" rx="2" />
 		{#each keyboardPaths as { id, d, delay }}
 			<path
@@ -70,6 +73,10 @@
 <style>
 	.keyboard-icon {
 		overflow: visible;
+	}
+
+	.keyboard-bg {
+		opacity: 0.3;
 	}
 
 	.keyboard-key {

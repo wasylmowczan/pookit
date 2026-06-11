@@ -1,6 +1,7 @@
 <script lang="ts">
 	interface Props {
 		color?: string;
+		secondaryColor?: string;
 		size?: number;
 		strokeWidth?: number;
 		isHovered?: boolean;
@@ -9,8 +10,9 @@
 
 	let {
 		color = 'currentColor',
+		secondaryColor = 'currentColor',
 		size = 18,
-		strokeWidth = 2,
+		strokeWidth = 1.5,
 		isHovered = $bindable(false),
 		classes = ''
 	}: Props = $props();
@@ -46,13 +48,17 @@
 			<path d="M3 6h18" />
 			<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
 		</g>
-		<path d="M19 8v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V8" class:animate-path={isHovered} />
+		<path d="M19 8v12c0 1-1 2-2 2H7c-1 0-2-1-2-2V8" fill={secondaryColor} class="trash-body" class:animate-path={isHovered} />
 		<line x1="10" x2="10" y1="12" y2="17" class:animate-path={isHovered} />
 		<line x1="14" x2="14" y1="12" y2="17" class:animate-path={isHovered} />
 	</svg>
 </div>
 
 <style>
+	.trash-body {
+		opacity: 0.3;
+	}
+
 	.is-animated {
 		transform: translateY(-1px);
 		transition: transform 0.2s ease-in;

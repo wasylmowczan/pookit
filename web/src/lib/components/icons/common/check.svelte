@@ -1,8 +1,9 @@
 <script>
 	let {
 		color = 'currentColor',
+		secondaryColor = 'currentColor',
 		size = 28,
-		strokeWidth = 2,
+		strokeWidth = 1.5,
 		isHovered = false,
 		classes = ''
 	} = $props();
@@ -32,6 +33,12 @@
 	>
 		<path
 			d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
+			fill={secondaryColor}
+			stroke="none"
+			class="badge-bg"
+		/>
+		<path
+			d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
 		/>
 		<path d="M9 12l2 2 4-4" class="check-path" />
 	</svg>
@@ -40,6 +47,10 @@
 <style>
 	.badge-check-icon {
 		overflow: visible;
+	}
+
+	.badge-bg {
+		opacity: 0.2;
 	}
 
 	.check-path {

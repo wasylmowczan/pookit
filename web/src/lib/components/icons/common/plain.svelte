@@ -1,8 +1,9 @@
 <script>
 	let {
 		color = 'currentColor',
+		secondaryColor = 'currentColor',
 		size = 20,
-		strokeWidth = 2,
+		strokeWidth = 1.5,
 		isHovered = false,
 		classes = ''
 	} = $props();
@@ -43,6 +44,7 @@
 	>
 		<path
 			class="plane"
+			fill={secondaryColor}
 			d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"
 		/>
 		{#each SPEED_LINES as line, index}
@@ -53,6 +55,7 @@
 				y2={line.y2}
 				stroke={color}
 				stroke-width="1"
+				stroke-opacity="0.5"
 				class="speed-line"
 				style="--delay: {line.delay}s"
 			/>
@@ -71,6 +74,7 @@
 		transform: translate(var(--x), var(--y)) scale(var(--scale));
 		transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 		transform-origin: center;
+		fill-opacity: 0.3;
 	}
 
 	.plane-icon.animate .plane {

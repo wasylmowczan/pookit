@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
-	import BookImageIcon from '$lib/components/icons/common/book-image.svelte';
+	import UserSettingsIcon from '$lib/components/icons/common/user-settings.svelte';
 	import KeyboardIcon from '$lib/components/icons/common/keyboard.svelte';
 	import TrashIcon from '$lib/components/icons/common/trash-2.svelte';
 
@@ -14,8 +14,8 @@
 	const navigation = [
 		{
 			title: 'Profile',
-			href: '/settings/avatar',
-			icon: BookImageIcon
+			href: '/settings/profile',
+			icon: UserSettingsIcon
 		},
 		{
 			title: 'Password',

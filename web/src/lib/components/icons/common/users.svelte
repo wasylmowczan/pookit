@@ -3,8 +3,9 @@
 
 	let {
 		color = 'currentColor',
+		secondaryColor = 'currentColor',
 		size = 18,
-		strokeWidth = 2,
+		strokeWidth = 1.5,
 		isHovered = false,
 		classes = ''
 	} = $props();
@@ -39,15 +40,23 @@
 		class="users-icon"
 	>
 		<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-		<circle cx="9" cy="7" r="4" />
-		<path d="M22 21v-2a4 4 0 0 0-3-3.87" style="transform: translateX({$animatedX}px)" />
-		<path d="M16 3.13a4 4 0 0 1 0 7.75" style="transform: translateX({$animatedX}px)" />
+		<circle cx="9" cy="7" r="4" fill={secondaryColor} class="main-circle" />
+		<path d="M22 21v-2a4 4 0 0 0-3-3.87" class="secondary-person" style="transform: translateX({$animatedX}px)" />
+		<path d="M16 3.13a4 4 0 0 1 0 7.75" class="secondary-person" style="transform: translateX({$animatedX}px)" />
 	</svg>
 </div>
 
 <style>
 	.users-icon {
 		overflow: visible;
+	}
+
+	.main-circle {
+		opacity: 0.3;
+	}
+
+	.secondary-person {
+		opacity: 0.3;
 	}
 
 	.users-icon path,

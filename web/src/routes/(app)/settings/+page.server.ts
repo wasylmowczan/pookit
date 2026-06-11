@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 
 export const load = () => {
-	redirect(303, '/settings/avatar');
+	redirect(303, '/settings/profile');
 };

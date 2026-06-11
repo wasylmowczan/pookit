@@ -1,8 +1,8 @@
 <script lang="ts">
-	import CheckIcon from '$lib/components/icons/common/check.svelte';
 	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-	import CreditCard from '@lucide/svelte/icons/credit-card';
+	import LandmarkIcon from '$lib/components/icons/common/landmark.svelte';
 	import LogOut from '@lucide/svelte/icons/log-out';
+	import UserSettingsIcon from '$lib/components/icons/common/user-settings.svelte';
 
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
@@ -62,12 +62,12 @@
 				</DropdownMenu.Label>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
-					<DropdownMenu.Item onclick={() => goto(`/settings/avatar`)}>
-						<CheckIcon />
+					<DropdownMenu.Item onclick={() => goto(`/settings/profile`)}>
+						<UserSettingsIcon />
 						Account
 					</DropdownMenu.Item>
 					<DropdownMenu.Item onclick={() => goto(`/billing`)}>
-						<CreditCard />
+						<LandmarkIcon />
 						Billing
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
