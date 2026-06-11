@@ -32,22 +32,22 @@
 		<div class="flex items-end {s.gap}">
 			{#each [0, 1, 2] as i}
 				<div
-					class="loader-dot {s.dot} bg-primary"
+					class="loader-dot {s.dot} bg-current"
 					style="animation-delay: {i * 120}ms"
 				></div>
 			{/each}
 		</div>
 	{:else if variant === 'pulse'}
 		<div class="relative flex items-center justify-center">
-			<div class="loader-pulse-ring absolute {size === 'sm' ? 'size-6' : size === 'md' ? 'size-10' : 'size-14'} border-2 border-primary"></div>
-			<div class="loader-pulse-ring-2 absolute {size === 'sm' ? 'size-6' : size === 'md' ? 'size-10' : 'size-14'} border-2 border-primary"></div>
-			<div class="{size === 'sm' ? 'size-2' : size === 'md' ? 'size-3.5' : 'size-5'} bg-primary loader-pulse-core"></div>
+			<div class="loader-pulse-ring absolute {size === 'sm' ? 'size-6' : size === 'md' ? 'size-10' : 'size-14'} border-2 border-current"></div>
+			<div class="loader-pulse-ring-2 absolute {size === 'sm' ? 'size-6' : size === 'md' ? 'size-10' : 'size-14'} border-2 border-current"></div>
+			<div class="{size === 'sm' ? 'size-2' : size === 'md' ? 'size-3.5' : 'size-5'} bg-current loader-pulse-core"></div>
 		</div>
 	{:else if variant === 'bars'}
 		<div class="flex items-end {s.gap}">
 			{#each [0, 1, 2, 3] as i}
 				<div
-					class="loader-bar {s.bar} bg-primary"
+					class="loader-bar {s.bar} bg-current"
 					style="animation-delay: {i * 100}ms"
 				></div>
 			{/each}
