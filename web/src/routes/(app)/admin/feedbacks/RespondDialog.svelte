@@ -10,6 +10,7 @@
 		DialogFooter
 	} from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
+	import Loader from '$lib/components/loader.svelte';
 	import { Label } from '$lib/components/ui/label';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import ReplyIcon from '@lucide/svelte/icons/reply';
@@ -95,6 +96,7 @@
 				<DialogFooter>
 					<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
 					<Button type="submit" disabled={!responseMessage.trim() || submitting}>
+						{#if submitting}<Loader variant="bars" size="sm" class="mr-2" />{/if}
 						{submitting ? 'Sending…' : 'Send response'}
 					</Button>
 				</DialogFooter>

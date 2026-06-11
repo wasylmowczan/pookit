@@ -10,6 +10,7 @@
 		DialogFooter
 	} from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
+	import Loader from '$lib/components/loader.svelte';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 
 	let {
@@ -70,6 +71,7 @@
 				<DialogFooter>
 					<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
 					<Button type="submit" variant="destructive" disabled={submitting}>
+						{#if submitting}<Loader variant="bars" size="sm" class="mr-2" />{/if}
 						{submitting ? 'Deleting…' : 'Delete feedback'}
 					</Button>
 				</DialogFooter>

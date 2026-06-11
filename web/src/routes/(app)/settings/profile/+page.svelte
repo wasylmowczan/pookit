@@ -8,7 +8,8 @@
 	import { fileProxy, superForm } from 'sveltekit-superforms';
 	import { untrack } from 'svelte';
 	import { toast } from 'svelte-sonner';
-	import { Camera, LoaderCircle, Trash } from '@lucide/svelte';
+	import { Camera, Trash } from '@lucide/svelte';
+	import Loader from '$lib/components/loader.svelte';
 	import AltAvatar from '$lib/assets/alt-avatar.svg';
 	import { zod4 as zod } from 'sveltekit-superforms/adapters';
 	import CardHeader from '$lib/components/ui/card/card-header.svelte';
@@ -176,7 +177,7 @@
 		<CardFooter class="border-t px-6 py-4">
 			<Button type="submit" disabled={loading}>
 				{#if loading}
-					<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+					<Loader variant="bars" size="sm" class="mr-2" />
 				{/if}
 				Save
 			</Button>

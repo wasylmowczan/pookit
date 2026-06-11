@@ -10,6 +10,7 @@
 		DialogFooter
 	} from '$lib/components/ui/dialog';
 	import { Button } from '$lib/components/ui/button';
+	import Loader from '$lib/components/loader.svelte';
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import { Textarea } from '$lib/components/ui/textarea';
@@ -111,6 +112,7 @@
 				<DialogFooter>
 					<Button type="button" variant="outline" onclick={() => (open = false)}>Cancel</Button>
 					<Button type="submit" variant="destructive" disabled={!reason.trim() || submitting}>
+						{#if submitting}<Loader variant="bars" size="sm" class="mr-2" />{/if}
 						{submitting ? 'Banning…' : 'Ban user'}
 					</Button>
 				</DialogFooter>

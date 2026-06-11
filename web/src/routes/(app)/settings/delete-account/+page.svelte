@@ -5,7 +5,7 @@
 	import { FormControl, FormField } from '$lib/components/ui/form';
 	import { defaultValues, superForm } from 'sveltekit-superforms';
 	import { toast } from 'svelte-sonner';
-	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
+	import Loader from '$lib/components/loader.svelte';
 	import { DeleteUserSchema } from '$lib/schemas.js';
 	import { zod4 as zod } from 'sveltekit-superforms/adapters';
 	import CardHeader from '$lib/components/ui/card/card-header.svelte';
@@ -60,7 +60,7 @@
 				disabled={loading || $formData.word !== 'DELETE'}
 			>
 				{#if loading}
-					<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+					<Loader variant="bars" size="sm" class="mr-2" />
 				{/if}
 				Delete
 			</Button>
