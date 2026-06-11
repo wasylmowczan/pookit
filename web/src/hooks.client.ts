@@ -1,13 +1,13 @@
 import posthog from 'posthog-js';
-import { env } from '$env/dynamic/public';
+import { config } from './lib/config-client';
 import type { HandleClientError } from '@sveltejs/kit';
 
 export async function init() {
-	if (!env.PUBLIC_POSTHOG_KEY) return;
+	if (!config.posthogKey) return;
 
-	posthog.init(env.PUBLIC_POSTHOG_KEY, {
+	posthog.init(config.posthogKey, {
 		api_host: '/ingest',
-		ui_host: env.PUBLIC_POSTHOG_HOST,
+		ui_host: config.posthogHost,
 		defaults: '2026-01-30',
 		capture_pageview: false,
 		capture_pageleave: false,
