@@ -1,8 +1,17 @@
 <script lang="ts">
-	import { HeroSection } from './components';
-	import { FeaturesSection } from './components';
+	import {
+		HeroSection,
+		FeaturesSection,
+		AppFeaturesSection,
+		AdminFeaturesSection,
+		PocketBaseFeaturesSection,
+		MoreFeaturesSection
+	} from './components';
 </script>
-
 
 <HeroSection />
 <FeaturesSection />
+<AppFeaturesSection />
+<AdminFeaturesSection />
+<PocketBaseFeaturesSection />
+<MoreFeaturesSection />
