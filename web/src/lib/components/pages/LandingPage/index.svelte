@@ -5,7 +5,8 @@
 		AppFeaturesSection,
 		AdminFeaturesSection,
 		PocketBaseFeaturesSection,
-		MoreFeaturesSection
+		MoreFeaturesSection,
+		FaqSection
 	} from './components';
 </script>
 
@@ -15,3 +16,4 @@
 <AdminFeaturesSection />
 <PocketBaseFeaturesSection />
 <MoreFeaturesSection />
+<FaqSection />

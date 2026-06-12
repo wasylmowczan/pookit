@@ -5,3 +5,4 @@ export { default as AppFeaturesSection } from './AuthFeaturesSection/index.svelt
 export { default as AdminFeaturesSection } from './AdminFeaturesSection/index.svelte';
 export { default as PocketBaseFeaturesSection } from './PocketBaseFeaturesSection/index.svelte';
 export { default as MoreFeaturesSection } from './MoreFeaturesSection/index.svelte';
+export { default as FaqSection } from './FaqSection/index.svelte';
