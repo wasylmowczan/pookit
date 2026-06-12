@@ -202,52 +202,36 @@
 	}
 
 	// ── Google ────────────────────────────────────────────────────────────────
-	function handleGoogleLogin() {
-		const w = 600,
-			h = 700;
-		const left = Math.round(window.screenX + (window.outerWidth - w) / 2);
-		const top = Math.round(window.screenY + (window.outerHeight - h) / 2);
-		const popup = window.open(
-			'',
-			'google-auth',
-			`width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`
-		);
-
+	async function handleGoogleLogin() {
 		googleLoading = true;
-		const pb = new PocketBase(config.pbUrl);
-		pb.collection('users')
-			.authWithOAuth2({
-				provider: 'google',
-				urlCallback(url) {
-					if (popup) popup.location.href = url;
-					else
-						window.open(
-							url,
-							'google-auth',
-							`width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`
-						);
-				}
-			})
-			.then(async (authData) => {
-				const fd = new FormData();
-				fd.append('token', authData.token);
-				fd.append('record', JSON.stringify(authData.record));
-				const res = await fetch('?/loginWithGoogle', { method: 'POST', body: fd });
-				if (res.ok) {
-					posthog.identify(authData.record.email, { email: authData.record.email });
-					toast.success('Logged in successfully.');
-					localStorage.setItem('lastAuthMethod', 'google');
-					redirecting = true;
-					window.location.href = redirectTo;
-				} else {
-					toast.error('Google login failed.');
-					googleLoading = false;
-				}
-			})
-			.catch(() => {
-				toast.error('Google login failed.');
+		try {
+			const pb = new PocketBase(config.pbUrl);
+			const authMethods = await pb.collection('users').listAuthMethods();
+			const provider = authMethods.oauth2?.providers?.find(
+				(p: { name: string }) => p.name === 'google'
+			);
+
+			if (!provider) {
+				toast.error('Google login is not available.');
 				googleLoading = false;
-			});
+				return;
+			}
+
+			const callbackUrl = `${window.location.origin}/auth/google/callback`;
+			sessionStorage.setItem(
+				'google_oauth',
+				JSON.stringify({
+					codeVerifier: provider.codeVerifier,
+					state: provider.state,
+					redirectTo
+				})
+			);
+
+			window.location.href = provider.authURL + encodeURIComponent(callbackUrl);
+		} catch {
+			toast.error('Google login failed.');
+			googleLoading = false;
+		}
 	}
 </script>
 

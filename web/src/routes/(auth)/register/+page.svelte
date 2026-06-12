@@ -12,7 +12,7 @@
 	import CardContent from '$lib/components/ui/card/card-content.svelte';
 	import FormLabel from '$lib/components/ui/form/form-label.svelte';
 	import FormFieldErrors from '$lib/components/ui/form/form-field-errors.svelte';
-	import { Seo, FullscreenLoader } from '$lib/components/modules';
+	import { Seo } from '$lib/components/modules';
 	import { config } from '$lib/config-client';
 	import posthog from 'posthog-js';
 	import PocketBase from 'pocketbase';
@@ -29,7 +29,6 @@
 
 	let loading = $state(false);
 	let googleLoading = $state(false);
-	let redirecting = $state(false);
 	let lastAuthMethod = $state<string | null>(null);
 
 	onMount(() => {
@@ -63,58 +62,36 @@
 		{ label: 'Get Pro access' }
 	];
 
-	function handleGoogleLogin() {
-		// Open popup synchronously in the click handler so browsers treat it as
-		// user-initiated (prevents it from opening as a new tab instead of a popup).
-		const w = 600,
-			h = 700;
-		const left = Math.round(window.screenX + (window.outerWidth - w) / 2);
-		const top = Math.round(window.screenY + (window.outerHeight - h) / 2);
-		const popup = window.open(
-			'',
-			'google-auth',
-			`width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`
-		);
-
+	async function handleGoogleLogin() {
 		googleLoading = true;
-		const pb = new PocketBase(config.pbUrl);
-		pb.collection('users')
-			.authWithOAuth2({
-				provider: 'google',
-				urlCallback(url) {
-					if (popup) {
-						popup.location.href = url;
-					} else {
-						window.open(
-							url,
-							'google-auth',
-							`width=${w},height=${h},top=${top},left=${left},resizable,menubar=no`
-						);
-					}
-				}
-			})
-			.then(async (authData) => {
-				const fd = new FormData();
-				fd.append('token', authData.token);
-				fd.append('record', JSON.stringify(authData.record));
+		try {
+			const pb = new PocketBase(config.pbUrl);
+			const authMethods = await pb.collection('users').listAuthMethods();
+			const provider = authMethods.oauth2?.providers?.find(
+				(p: { name: string }) => p.name === 'google'
+			);
 
-				const res = await fetch('?/loginWithGoogle', { method: 'POST', body: fd });
-
-				if (res.ok) {
-					posthog.identify(authData.record.email, { email: authData.record.email });
-					toast.success('Signed in with Google.');
-					localStorage.setItem('lastAuthMethod', 'google');
-					redirecting = true;
-					window.location.href = redirectTo;
-				} else {
-					toast.error('Google sign-in failed.');
-					googleLoading = false;
-				}
-			})
-			.catch(() => {
-				toast.error('Google sign-in failed.');
+			if (!provider) {
+				toast.error('Google sign-in is not available.');
 				googleLoading = false;
-			});
+				return;
+			}
+
+			const callbackUrl = `${window.location.origin}/auth/google/callback`;
+			sessionStorage.setItem(
+				'google_oauth',
+				JSON.stringify({
+					codeVerifier: provider.codeVerifier,
+					state: provider.state,
+					redirectTo
+				})
+			);
+
+			window.location.href = provider.authURL + encodeURIComponent(callbackUrl);
+		} catch {
+			toast.error('Google sign-in failed.');
+			googleLoading = false;
+		}
 	}
 </script>
 
@@ -124,9 +101,6 @@
 	keywords="register, register to ai image generator"
 />
 
-{#if redirecting}
-	<FullscreenLoader message="Signing you in…" />
-{/if}
 
 <div class="min-h-screen grid lg:grid-cols-2">
 	<!-- Left: Form -->
