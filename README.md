@@ -1,6 +1,6 @@
 # Pookit
 
-SvelteKit SaaS starter kit.
+Pookit is a modern SaaS template/boilerplate built with SvelteKit, Pocketbase and shadcn-svelte. Includes auth, user & admin dashboard, user settings, and more.
 
 ## 🏗 Project Structure
 
@@ -12,7 +12,9 @@ SvelteKit SaaS starter kit.
 - SvelteKit frontend with TailwindCSS
 - PocketBase backend with SQLite
 - Authentication system
-- Dark/Light mode
+- Super admin dashboard
+- Billing system
+- Email support
 - Mobile optimized
 
 ## 🚀 Local Development
@@ -53,15 +55,14 @@ SvelteKit SaaS starter kit.
 
 ### Backend: PocketHost
 
-1. Sign up on [PocketHost](https://pockethost.io)
-2. Create new instance and connect GitHub repo
-3. Set environment variables in PocketHost dashboard
-4. Note your Public URL (e.g., `https://your-instance.pockethost.io`)
+1. Sign up on [PocketHost](https://pockethost.io).
+2. Create new instance and connect GitHub repository.
+3. Note your Public URL (e.g., `https://your-instance.pockethost.io`)
 
 ### Frontend: Cloudflare Pages
 
-1. Log in to [Cloudflare Pages](https://pages.cloudflare.com)
-2. Connect your GitHub repository
+1. Log in to [Cloudflare Pages](https://pages.cloudflare.com).
+2. Connect your GitHub repository.
 3. Set build settings:
    - Build command: `npm run build`
    - Build output directory: `.svelte-kit/cloudflare`
@@ -71,9 +72,23 @@ SvelteKit SaaS starter kit.
    ```
    PUBLIC_BASE_URL=https://pookit.dev/ // Cloudflare Pages URL
    PUBLIC_PB_URL=https://your-instance.pockethost.io // PB URL, dodaç w Cloudflare
+   PUBLIC_BASE_URL=https://pookit.dev/ // Cloudflare Pages URL
+   PUBLIC_PB_URL=https://your-instance.pockethost.io // URL of your PocketBase instance
+   PRIVATE_PB_ADMIN_EMAIL=email@example.com
+   PRIVATE_PB_ADMIN_PASSWORD=********
+   PRIVATE_POSTHOG_PROJECT_API_KEY=phc_xxxx
+   PRIVATE_POSTHOG_API_HOST=https://eu.i.posthog.com
+   PRIVATE_GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+   PRIVATE_GOOGLE_CLIENT_SECRET=GOCSPX-xxxx
+   RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx
+   RESEND_FROM_ADDRESS=Pookit.dev <hello@yourdomain.com>
+   RESEND_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxx
+   POLAR_ACCESS_TOKEN=xxxxxxxxxxxxxxxxxxxx
+   POLAR_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxx
+   POLAR_SERVER=sandbox
    ```
 
-5. Add Compatibility flag `nodejs_compat`
+5. Add Compatibility flag `nodejs_compat_v2`
 
 ## 🔧 Configuration
 
