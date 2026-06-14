@@ -6,7 +6,8 @@
 		AdminFeaturesSection,
 		PocketBaseFeaturesSection,
 		MoreFeaturesSection,
-		FaqSection
+		FaqSection,
+		CtaSection
 	} from './components';
 </script>
 
@@ -17,3 +18,4 @@
 <PocketBaseFeaturesSection />
 <MoreFeaturesSection />
 <FaqSection />
+<CtaSection />

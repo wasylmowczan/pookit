@@ -6,3 +6,4 @@ export { default as AdminFeaturesSection } from './AdminFeaturesSection/index.sv
 export { default as PocketBaseFeaturesSection } from './PocketBaseFeaturesSection/index.svelte';
 export { default as MoreFeaturesSection } from './MoreFeaturesSection/index.svelte';
 export { default as FaqSection } from './FaqSection/index.svelte';
+export { default as CtaSection } from './CtaSection/index.svelte';
