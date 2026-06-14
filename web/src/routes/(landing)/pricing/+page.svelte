@@ -14,11 +14,14 @@
 			'Legal Pages (Privacy Policy, ToS)',
 			'Cloudflare Deployment Config'
 		],
-		pro: ['Mails', 'Blog Integration', 'Extra Landing pages', 'AI coding agents support']
+		pro: [
+			'Mails',
+			'Blog Integration',
+			'Extra Landing pages',
+			'AI coding agents support',
+			'Community support on Discord'
+		]
 	};
 </script>
 
-<PricingPage
-	pricingList={defaultPricingList}
-	proPlans={data.proPlans}
-/>
+<PricingPage pricingList={defaultPricingList} proPlans={data.proPlans} />
