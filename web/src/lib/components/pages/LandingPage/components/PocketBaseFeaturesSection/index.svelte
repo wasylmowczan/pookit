@@ -7,8 +7,7 @@
 	import Lock from '@lucide/svelte/icons/lock';
 	import Server from '@lucide/svelte/icons/server';
 	import KeyRound from '@lucide/svelte/icons/key-round';
-	import heroimageLight from '$lib/assets/hero_light.png';
-	import heroimageDark from '$lib/assets/hero_dark.png';
+	import pocketbaseVideo from '$lib/assets/pocketbase.mp4';
 	import { FeatureShowcase, BrowserMockup } from '$lib/components/blocks';
 
 	const features = [
@@ -60,8 +59,7 @@
 	{#snippet mockup()}
 		<BrowserMockup
 			url="localhost:8090/_/"
-			imageLight={heroimageLight}
-			imageDark={heroimageDark}
+			video={pocketbaseVideo}
 			alt="PocketBase admin UI preview"
 		/>
 	{/snippet}

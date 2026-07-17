@@ -33,7 +33,7 @@ export const actions: Actions = {
 			});
 
 			await locals.pb.collection('users').delete(locals.user?.id);
-			redirect(303, `/login`);
+			redirect(303, `/`);
 		} catch (err) {
 			if (err instanceof ClientResponseError) {
 				// eslint-disable-next-line no-console

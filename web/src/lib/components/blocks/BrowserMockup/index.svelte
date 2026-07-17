@@ -1,12 +1,39 @@
 <script lang="ts">
 	interface Props {
 		url: string;
-		imageLight: string;
-		imageDark: string;
+		imageLight?: string;
+		imageDark?: string;
+		video?: string;
+		poster?: string;
 		alt?: string;
 	}
 
-	let { url, imageLight, imageDark, alt = 'Preview' }: Props = $props();
+	let { url, imageLight, imageDark, video, poster, alt = 'Preview' }: Props = $props();
+
+	let videoEl = $state<HTMLVideoElement>();
+
+	// Lazy-load videos: defer the download and only play while in view.
+	$effect(() => {
+		const el = videoEl;
+		if (!el || !video) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						if (!el.src) el.src = video; // fetch the file only once, on first reveal
+						el.play().catch(() => {}); // ignore autoplay rejections
+					} else {
+						el.pause();
+					}
+				}
+			},
+			{ rootMargin: '200px', threshold: 0.1 }
+		);
+
+		observer.observe(el);
+		return () => observer.disconnect();
+	});
 </script>
 
 <div class="overflow-hidden border border-border bg-card shadow-md">
@@ -19,7 +46,20 @@
 		</div>
 	</div>
 	<div class="relative aspect-video overflow-hidden">
-		<img src={imageLight} {alt} class="h-full w-full object-cover object-top dark:hidden" />
-		<img src={imageDark} {alt} class="hidden h-full w-full object-cover object-top dark:block" />
+		{#if video}
+			<video
+				bind:this={videoEl}
+				{poster}
+				class="h-full w-full object-cover object-top"
+				preload="none"
+				muted
+				loop
+				playsinline
+				aria-label={alt}
+			></video>
+		{:else}
+			<img src={imageLight} {alt} class="h-full w-full object-cover object-top dark:hidden" />
+			<img src={imageDark} {alt} class="hidden h-full w-full object-cover object-top dark:block" />
+		{/if}
 	</div>
 </div>

@@ -5,8 +5,7 @@
 	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import MessageSquare from '@lucide/svelte/icons/message-square';
 	import Mail from '@lucide/svelte/icons/mail';
-	import heroimageLight from '$lib/assets/hero_light.png';
-	import heroimageDark from '$lib/assets/hero_dark.png';
+	import adminVideo from '$lib/assets/admin.mp4';
 	import { FeatureShowcase, BrowserMockup } from '$lib/components/blocks';
 
 	const features = [
@@ -46,9 +45,8 @@
 >
 	{#snippet mockup()}
 		<BrowserMockup
-			url="app.pookit.dev/admin/users"
-			imageLight={heroimageLight}
-			imageDark={heroimageDark}
+			url="https://pookit.dev/admin/users"
+			video={adminVideo}
 			alt="Admin dashboard preview"
 		/>
 	{/snippet}

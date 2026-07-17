@@ -7,8 +7,7 @@
 	import Shield from '@lucide/svelte/icons/shield';
 	import KeySquare from '@lucide/svelte/icons/key-square';
 	import UserX from '@lucide/svelte/icons/user-x';
-	import heroimageLight from '$lib/assets/hero_light.png';
-	import heroimageDark from '$lib/assets/hero_dark.png';
+	import loginVideo from '$lib/assets/login.mp4';
 	import { FeatureShowcase, BrowserMockup } from '$lib/components/blocks';
 
 	const features = [
@@ -62,11 +61,6 @@
 	{features}
 >
 	{#snippet mockup()}
-		<BrowserMockup
-			url="app.pookit.dev/login"
-			imageLight={heroimageLight}
-			imageDark={heroimageDark}
-			alt="Auth flow preview"
-		/>
+		<BrowserMockup url="https://pookit.dev/login" video={loginVideo} alt="Auth flow preview" />
 	{/snippet}
 </FeatureShowcase>
